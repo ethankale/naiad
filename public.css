@@ -1,0 +1,159 @@
+@CHARSET "ISO-8859-1";
+body {
+	font-family: arial, helvetica, sans-serif; 
+	margin:0px;
+}
+	
+ div.header{
+	background-color:#00B4F7;
+	padding:10px;
+	color:white;
+	font-weight:bold;
+}
+div.header a:link, div.header a:visited{
+	color:white;
+}
+div.body{
+	padding:10px;
+}
+
+div.navheader{
+	background-color:#00B4F7;
+	font-weight:normal;
+}
+ div.navheader a:link, div.navheader a:visited{
+	color:white;
+}
+
+.tdright {
+	text-align:right;
+	vertical-align:top;
+	width:110px;
+}
+
+TABLE.datatable {
+	border-spacing:0px;
+	border:solid black 1px;	
+	border-collapse:collapse;
+}
+TABLE.datatable TD,TABLE.datatable TH {
+
+	vertical-align:top;
+	padding-left:5px;
+	padding-right:5px;
+	border:solid black 1px;	
+	border-collapse:collapse;
+	
+}
+TD.datanote {
+	color:blue;
+}
+TABLE.entrytable {
+	border-spacing:0px;
+	/*border:solid #999999 1px;*/
+	border-collapse:collapse;
+}
+
+TABLE.entrytable TD{
+	padding-left:5px;
+	font-size:.9em;
+	white-space:nowrap;
+}
+	
+TABLE.entrytable TD.inputerror{
+	color:#FF0000;
+	font-weight:bold;
+}
+	
+TABLE.entrytable TR.brow TD{
+	padding-bottom:10px;
+	/*border-bottom:solid #999999 1px;*/
+	border-collapse:collapse;
+}
+	
+TABLE.entrytable TD.tdright{
+	font-weight:bold;
+	text-align:right;
+	width:10%;
+	vertical-align:middle;
+	white-space:nowrap;
+	padding-right:8px;
+	/*border-right:solid #999999 1px;*/
+}
+
+TABLE.entrytable TD.tdadmin{
+	vertical-align:middle;
+	white-space:nowrap;
+	padding-right:8px;
+	/*border-left:solid #999999 1px;
+	border-bottom:solid #999999 1px;*/
+	border-collapse:collapse;
+}
+
+#t2 th.meas_head  {
+    border-radius: 5px;
+    background-color:#ccc;
+    text-align:left;
+}
+
+#t2 th.meas_head:hover  {
+    background-color:#99CCFF;
+}
+
+#t2 th.meas_subhead  {
+    border-radius: 5px;
+    background-color:#eee;
+}
+
+TABLE.formtable {
+	border-spacing:0px;
+	padding-left:5px;
+}
+
+TABLE.formtable TD{
+	font-size:1em;
+}
+
+TABLE.formtable TD.inputerror{
+	color:#FF0000;
+	font-weight:bold;
+}
+
+TABLE.formtable TD.notes{
+	font-size:.8em;
+}
+
+TABLE.listtable {
+	border-spacing:0px;
+	padding-left:5px;
+}
+
+TABLE.listtable TD{
+	font-size:1em;
+}
+
+IMG {
+	border:0px;
+}
+
+SELECT {
+	width:200px
+}
+	
+.units {
+	font-size:.75em;
+}
+
+DIV.login {
+	padding:0px;
+	font-size:.75em;
+}
+
+DIV.login INPUT{
+	font-size:.75em;
+}
+
+DIV.login FORM{
+	padding:0px;
+	margin:0px;
+}
