@@ -28,7 +28,6 @@ USE `naiad`;
 -- Table structure for table `general_values`
 --
 
-DROP TABLE IF EXISTS `general_values`;
 CREATE TABLE IF NOT EXISTS `general_values` (
   `fieldname` varchar(20) NOT NULL,
   `fieldvalue` varchar(200) NOT NULL,
@@ -41,7 +40,6 @@ CREATE TABLE IF NOT EXISTS `general_values` (
 -- Table structure for table `measurements`
 --
 
-DROP TABLE IF EXISTS `measurements`;
 CREATE TABLE IF NOT EXISTS `measurements` (
   `m_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `mtime` datetime NOT NULL,
@@ -78,7 +76,6 @@ CREATE TABLE IF NOT EXISTS `measurements` (
 -- Table structure for table `measurement_type`
 --
 
-DROP TABLE IF EXISTS `measurement_type`;
 CREATE TABLE IF NOT EXISTS `measurement_type` (
   `mtypeid` varchar(10) NOT NULL,
   `mtname` varchar(255) NOT NULL,
@@ -102,92 +99,10 @@ CREATE TABLE IF NOT EXISTS `measurement_type` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
-
---
--- Stand-in structure for view `meas_all`
---
-DROP VIEW IF EXISTS `meas_all`;
-CREATE TABLE IF NOT EXISTS `meas_all` (
-`timeframe` datetime
-,`value` float
-,`detection_limit` tinyint(1)
-,`depth` float
-,`siteid` varchar(7)
-,`mtypeid` varchar(10)
-,`mnotes` varchar(255)
-,`duplicate` tinyint(1)
-,`proj_id` varchar(16)
-);
--- --------------------------------------------------------
-
---
--- Stand-in structure for view `meas_at_site`
---
-DROP VIEW IF EXISTS `meas_at_site`;
-CREATE TABLE IF NOT EXISTS `meas_at_site` (
-`mtypeid` varchar(10)
-,`siteid` varchar(7)
-,`mtname` varchar(255)
-,`cnt` bigint(21)
-);
--- --------------------------------------------------------
-
---
--- Stand-in structure for view `meas_monthly`
---
-DROP VIEW IF EXISTS `meas_monthly`;
-CREATE TABLE IF NOT EXISTS `meas_monthly` (
-`timeframe` varchar(7)
-,`value` double
-,`detection_limit` int(1)
-,`depth` float
-,`siteid` varchar(7)
-,`mtypeid` varchar(10)
-,`mnotes` char(0)
-,`duplicate` int(1)
-,`proj_id` varchar(16)
-);
--- --------------------------------------------------------
-
---
--- Stand-in structure for view `meas_weekly`
---
-DROP VIEW IF EXISTS `meas_weekly`;
-CREATE TABLE IF NOT EXISTS `meas_weekly` (
-`timeframe` varchar(7)
-,`value` double
-,`detection_limit` int(1)
-,`depth` float
-,`siteid` varchar(7)
-,`mtypeid` varchar(10)
-,`mnotes` char(0)
-,`duplicate` int(1)
-,`proj_id` varchar(16)
-);
--- --------------------------------------------------------
-
---
--- Stand-in structure for view `meas_yearly`
---
-DROP VIEW IF EXISTS `meas_yearly`;
-CREATE TABLE IF NOT EXISTS `meas_yearly` (
-`timeframe` varchar(4)
-,`value` double
-,`detection_limit` int(1)
-,`depth` float
-,`siteid` varchar(7)
-,`mtypeid` varchar(10)
-,`mnotes` char(0)
-,`duplicate` int(1)
-,`proj_id` varchar(16)
-);
--- --------------------------------------------------------
-
 --
 -- Table structure for table `monitoring_sites`
 --
 
-DROP TABLE IF EXISTS `monitoring_sites`;
 CREATE TABLE IF NOT EXISTS `monitoring_sites` (
   `siteid` varchar(7) NOT NULL,
   `latitude` float(9,6) DEFAULT NULL,
@@ -212,7 +127,6 @@ CREATE TABLE IF NOT EXISTS `monitoring_sites` (
 -- Table structure for table `mon_gear`
 --
 
-DROP TABLE IF EXISTS `mon_gear`;
 CREATE TABLE IF NOT EXISTS `mon_gear` (
   `gear_id` varchar(16) NOT NULL,
   `description` varchar(255) DEFAULT NULL,
@@ -228,7 +142,6 @@ CREATE TABLE IF NOT EXISTS `mon_gear` (
 -- Table structure for table `mon_projects`
 --
 
-DROP TABLE IF EXISTS `mon_projects`;
 CREATE TABLE IF NOT EXISTS `mon_projects` (
   `proj_id` varchar(16) NOT NULL,
   `vendor` varchar(255) NOT NULL,
@@ -243,7 +156,6 @@ CREATE TABLE IF NOT EXISTS `mon_projects` (
 -- Table structure for table `precipitation_measurements`
 --
 
-DROP TABLE IF EXISTS `precipitation_measurements`;
 CREATE TABLE IF NOT EXISTS `precipitation_measurements` (
   `PM_ID` int(11) NOT NULL AUTO_INCREMENT,
   `pmdate` datetime NOT NULL,
@@ -265,7 +177,6 @@ CREATE TABLE IF NOT EXISTS `precipitation_measurements` (
 -- Table structure for table `precipitation_stations`
 --
 
-DROP TABLE IF EXISTS `precipitation_stations`;
 CREATE TABLE IF NOT EXISTS `precipitation_stations` (
   `StationID` varchar(6) NOT NULL,
   `Station_Name` varchar(50) NOT NULL,
@@ -278,52 +189,9 @@ CREATE TABLE IF NOT EXISTS `precipitation_stations` (
 -- --------------------------------------------------------
 
 --
--- Stand-in structure for view `precip_daily_view`
---
-DROP VIEW IF EXISTS `precip_daily_view`;
-CREATE TABLE IF NOT EXISTS `precip_daily_view` (
-`PS_ID` varchar(6)
-,`day` varchar(10)
-,`precip` double(20,3)
-,`max_T` float
-,`min_T` float
-,`avg_T` double
-,`max_wind` float
-,`min_wind` float
-,`avg_wind` double
-,`avg_wind_dir` decimal(14,4)
-,`max_press` float
-,`min_press` float
-,`avg_press` double
-);
--- --------------------------------------------------------
-
---
--- Stand-in structure for view `precip_monthly_view`
---
-DROP VIEW IF EXISTS `precip_monthly_view`;
-CREATE TABLE IF NOT EXISTS `precip_monthly_view` (
-`PS_ID` varchar(6)
-,`day` varchar(7)
-,`precip` double(20,3)
-,`max_T` float
-,`min_T` float
-,`avg_T` double
-,`max_wind` float
-,`min_wind` float
-,`avg_wind` double
-,`avg_wind_dir` decimal(14,4)
-,`max_press` float
-,`min_press` float
-,`avg_press` double
-);
--- --------------------------------------------------------
-
---
 -- Table structure for table `sample_procs`
 --
 
-DROP TABLE IF EXISTS `sample_procs`;
 CREATE TABLE IF NOT EXISTS `sample_procs` (
   `proc_id` varchar(10) NOT NULL,
   `description` varchar(255) DEFAULT NULL,
@@ -338,23 +206,9 @@ CREATE TABLE IF NOT EXISTS `sample_procs` (
 -- --------------------------------------------------------
 
 --
--- Stand-in structure for view `sites_list`
---
-DROP VIEW IF EXISTS `sites_list`;
-CREATE TABLE IF NOT EXISTS `sites_list` (
-`siteid` varchar(7)
-,`site_description` varchar(255)
-,`active` int(3)
-,`monitor_type` enum('L','S','P')
-,`waterbody_id` int(10) unsigned
-);
--- --------------------------------------------------------
-
---
 -- Table structure for table `sitings`
 --
 
-DROP TABLE IF EXISTS `sitings`;
 CREATE TABLE IF NOT EXISTS `sitings` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id',
   `lat` float NOT NULL,
@@ -374,7 +228,6 @@ CREATE TABLE IF NOT EXISTS `sitings` (
 -- Table structure for table `waterbodies`
 --
 
-DROP TABLE IF EXISTS `waterbodies`;
 CREATE TABLE IF NOT EXISTS `waterbodies` (
   `waterbody_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `wbody_type` enum('L','S','W') NOT NULL DEFAULT 'L',
@@ -390,7 +243,6 @@ CREATE TABLE IF NOT EXISTS `waterbodies` (
 -- Table structure for table `waterlevels`
 --
 
-DROP TABLE IF EXISTS `waterlevels`;
 CREATE TABLE IF NOT EXISTS `waterlevels` (
   `WLVL_ID` int(11) NOT NULL AUTO_INCREMENT,
   `WLVL_Date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
@@ -409,7 +261,6 @@ CREATE TABLE IF NOT EXISTS `waterlevels` (
 -- Table structure for table `wqdb_user_users`
 --
 
-DROP TABLE IF EXISTS `wqdb_user_users`;
 CREATE TABLE IF NOT EXISTS `wqdb_user_users` (
   `userID` bigint(20) NOT NULL AUTO_INCREMENT,
   `fname` varchar(100) DEFAULT NULL,
@@ -423,7 +274,7 @@ CREATE TABLE IF NOT EXISTS `wqdb_user_users` (
 
 
 -- Make the root user; grant admin status
-INSERT INTO `plslwd_waterq`.`wqdb_user_users` (
+INSERT INTO `naiad`.`wqdb_user_users` (
 `userID` ,
 `fname` ,
 `lname` ,
@@ -441,7 +292,6 @@ VALUES (
 -- Table structure for table `wqdb_user_user_creds`
 --
 
-DROP TABLE IF EXISTS `wqdb_user_user_creds`;
 CREATE TABLE IF NOT EXISTS `wqdb_user_user_creds` (
   `userID` bigint(20) NOT NULL,
   `email` varchar(255) NOT NULL,
@@ -452,7 +302,7 @@ CREATE TABLE IF NOT EXISTS `wqdb_user_user_creds` (
 
 
 -- Create the password entry for the root user, pwd 'naiad_root'
-INSERT INTO `plslwd_waterq`.`wqdb_user_user_creds` (
+INSERT INTO `naiad`.`wqdb_user_user_creds` (
 `userID` ,
 `email` ,
 `pass`
