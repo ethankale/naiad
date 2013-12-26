@@ -308,7 +308,7 @@ INSERT INTO `naiad`.`wqdb_user_user_creds` (
 `pass`
 )
 VALUES (
-'22', 'root', '0445e0d8552a5cde2a6d20203b5f9151'
+'1', 'root', '0445e0d8552a5cde2a6d20203b5f9151'
 );
 
 --Create some dummy data, so that the database is usable/testable.
