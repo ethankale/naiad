@@ -8,13 +8,18 @@
 require_once 'includes/wqinc.php';
 $pagelevel = PAGE_USER;
 require_once 'includes/outputformat.php';
-if ($_GET['storet_output']=="true")
-{
-    require_once 'measurements_report_equis.php';
-    exit;
-}
+
 // read desired output method and set pagename and output type
-if ($_GET['downloadcsv']=="true") {
+if (isset($_GET['storet_output'])) {
+    if ($_GET['storet_output']=="true")
+    {
+        require_once 'measurements_report_equis.php';
+        exit;
+    };
+};
+
+
+if ((isset($_GET['downloadcsv']) ? $_GET['downloadcsv'] : null) =="true") {
     $output_type=OF_CSV;
     $page_title="meas".$_GET["waterbodyid"].".csv";
 }
@@ -36,7 +41,7 @@ output_line($output_type, $research_link,false);
 $edit_return = urlencode ("measurements_report.php?".$_SERVER["QUERY_STRING"]);
 $profile=0;
 
-if ($_GET['lake_profiles']==1) $profile=1;
+if ((isset($_GET['lake_profiles']) ? $_GET['lake_profiles'] : null)==1) $profile=1;
 else $profile=0;
 
 // Initiate variables

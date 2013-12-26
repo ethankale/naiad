@@ -130,6 +130,7 @@ require_once 'includes/qp_header.php';
 <!--Some constants, loaded when the page loads.-->
 
 <script language="javascript">
+
 <?php 
 /* notes for javascript functions:
  * $wbid_s is an array of stream waterbody ids
@@ -167,10 +168,10 @@ require_once 'includes/qp_header.php';
         }
     }
     mysqli_free_result($res);
-    print 'var stream_ids=new Array("'.implode('","', $wbid_s)."\");\n";
-    print 'var stream_names=new Array("'.implode('","', $wbname_s)."\");\n";
-    print 'var lake_ids=new Array("'.implode('","', $wbid_l)."\");\n";
-    print 'var lake_names=new Array("'.implode('","', $wbname_l)."\");\n";
+    print 'var stream_ids   = ["'.implode('","', $wbid_s)."\"];\n";
+    print 'var stream_names = ["'.implode('","', $wbname_s)."\"];\n";
+    print 'var lake_ids     = ["'.implode('","', $wbid_l)."\"];\n";
+    print 'var lake_names   = ["'.implode('","', $wbname_l)."\"];\n";
 
     $s_sid = array();
     $s_wbid = array();
@@ -188,15 +189,15 @@ require_once 'includes/qp_header.php';
     
 // print out the javascript arrays
 
-    print 'var site_ids=new Array("'.implode('","', $s_sid)."\");\n";
-    print 'var site_wbids=new Array("'.implode('","', $s_wbid)."\");\n";
-    print 'var site_names=new Array("'.implode('","', $s_name)."\");\n";
-    print 'var site_types=new Array("'.implode('","', $s_type)."\");\n";
+    print 'var site_ids     = ["'.implode('","', $s_sid)."\"];\n";
+    print 'var site_wbids   = ["'.implode('","', $s_wbid)."\"];\n";
+    print 'var site_names   = ["'.implode('","', $s_name)."\"];\n";
+    print 'var site_types   = ["'.implode('","', $s_type)."\"];\n";
         
-    print 'var mt_tr=new Array("'.implode('","', $mt_tr)."\");\n";
-    print 'var mt_type=new Array("'.implode('","', $mt_types)."\");\n";
-    print 'var mt_profile=new Array("'.implode('","', $mt_profile)."\");\n";
-    print "var wbtype='';\n";
+    print 'var mt_tr        = ["'.implode('","', $mt_tr)."\"];\n";
+    print 'var mt_type      = ["'.implode('","', $mt_types)."\"];\n";
+    print 'var mt_profile   = ["'.implode('","', $mt_profile)."\"];\n";
+    print "var wbtype       = '';\n";
 ?>
 
 $.ready( $('#wb_type input[id="wbody_type_l"]').prop("checked", false) );
@@ -444,7 +445,7 @@ function validate(form_sub)
 <?php 
 // code to check the get string if this is a linked search (such as from the search again link on the results page.
 // fills in fields and runs the appropriate js functions as the page loads.
-if ($_GET["wbody_type"]) {
+if (isset($_GET["wbody_type"])) {
     if ($_GET["wbody_type"] =="L") print "document.getElementById('wbody_type_l').checked=true;\nupdate_waterbodies('L',document.getElementById('waterbodyid'));\n";
     if ($_GET["wbody_type"] =="S") print "document.getElementById('wbody_type_s').checked=true;\nupdate_waterbodies('S',document.getElementById('waterbodyid'));\n";
     
@@ -479,7 +480,7 @@ if ($_GET["wbody_type"]) {
             ";
         
     }
-    if ($_GET['lake_profiles']==1) print "document.getElementById('lake_profiles').checked=true; show_lake_measurements(true);\n";
+    if ((isset($_GET['lake_profiles']) ? $_GET['lake_profiles'] : null) ==1) print "document.getElementById('lake_profiles').checked=true; show_lake_measurements(true);\n";
 
     print "document.getElementById('averaging_".$_GET['averaging']."').checked=true;\n";
     
@@ -488,6 +489,7 @@ if ($_GET["wbody_type"]) {
     //print "popUpCal.init();";
 }
 ?>
+
 </script>
 
 <?php 

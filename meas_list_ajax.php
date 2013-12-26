@@ -12,7 +12,9 @@ $json = '';
 $sites=$_GET["siteid"];
 
 $sitessql = implode("','", $sites);
-    
+
+//echo $sitessql;
+
 if (strlen($sitessql) > 1) {
     
     //$stmt = $con->prepare("SELECT `mtypeid`, `mtname`, sum(`cnt`) as `cnt` FROM `meas_at_site` WHERE `siteid` IN ('$sitessql') GROUP BY `mtypeid`,`mtname`");

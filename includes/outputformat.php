@@ -96,8 +96,8 @@ function output_header($type, $cols, $sort=array(), $text="", $units){
 // $type here is the same as $output_type in measurements_report.php.
 function output_row ($type,$values_ar,$values_type){
     $log_user   = &$GLOBALS["log_user"];
-    $output_ar  =array();
-    $notes_ar   =array();
+    $output_ar  = array();
+    $notes_ar   = array();
     $edit_link  = $values_ar["edit_link"];
     unset($values_ar["edit_link"]);
     $values     = array_values($values_ar);
