@@ -112,6 +112,12 @@ $bind_param_type .= str_repeat("s", sizeof($mtypes));
 
 $editable= false;
 switch ($_GET['averaging']) {
+    case "d":
+        $view = "meas_daily";
+        $headers[1]="Day";
+        if($_GET["stdate"]) $sd = date_format(date_create_from_format("Y-m-d",$_GET["stdate"]),"Y-m-d");
+        if($_GET["enddate"]) $ed = date_format(date_create_from_format("Y-m-d",$_GET["enddate"]),"Y-m-d");
+        break;
     case "w":
         $view = "meas_weekly";
         $headers[1]="Week";

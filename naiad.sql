@@ -359,6 +359,23 @@ CREATE  VIEW `meas_weekly` AS select date_format(`measurements`.`mtime`,_utf8'%x
 -- --------------------------------------------------------
 
 --
+-- Structure for view `meas_daily`
+--
+CREATE  VIEW `meas_daily` AS 
+select date_format(`measurements`.`mtime`,_utf8'%Y-%m-%d') AS `timeframe`,
+  avg(`measurements`.`value`) AS `value`,
+  0 AS `detection_limit`,`measurements`.`depth` AS `depth`,
+  `measurements`.`siteid` AS `siteid`,
+  `measurements`.`mtypeid` AS `mtypeid`,
+  _utf8'' AS `mnotes`,
+  0 AS `duplicate`,
+  `measurements`.`proj_id` AS `proj_id` 
+from `measurements` 
+group by date_format(`measurements`.`mtime`,_utf8'%Y-%m-%d'),`measurements`.`depth`,`measurements`.`siteid`,`measurements`.`mtypeid`;
+
+-- --------------------------------------------------------
+
+--
 -- Structure for view `meas_yearly`
 --
 DROP TABLE IF EXISTS `meas_yearly`;

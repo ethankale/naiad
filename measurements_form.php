@@ -108,6 +108,7 @@ require_once 'includes/qp_header.php';
     <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
     <tr><td>&nbsp;</td><td><b>Query Options</b></td></tr>
     <tr><td class="tdright">Averaging Period</td><td><input type="radio" name="averaging" id="averaging_n" value="n" checked>none<br>
+        <input type="radio" name="averaging" id="averaging_d" value="d">Daily<br>
         <input type="radio" name="averaging" id="averaging_w" value="w">Weekly<br>
         <input type="radio" name="averaging" id="averaging_m" value="m">Monthly<br>
         <input type="radio" name="averaging" id="averaging_y" value="y">Yearly</td></tr>

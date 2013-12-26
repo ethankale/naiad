@@ -64,7 +64,7 @@ function output_header($type, $cols, $sort=array(), $text="", $units){
             $link = preg_replace("/&sortdir=.*/", "", $link);
             
             print "<TR>";
-            print "<TH>$cols[0]<a href=\"$link&sortkey=$sort[$i]&sortdir=DESC\"><img src=\"images/sort_arrow.png\"></a><a href=\"$link&sortkey=$sort[$i]&sortdir=ASC\"><img src=\"images/sort_arrowup.png\"></a></TH>";
+            print "<TH>$cols[0]</TH>";
             for ($i=1;$i<sizeof($cols);$i++)
             {
                 if ($sort[$i]) {
@@ -148,13 +148,12 @@ function output_row ($type,$values_ar,$values_type){
     }    
     if ($type==OF_TBL){
         // Looks like $notes_ar and $output_ar are keyed the same, so that $i references values from the same measurement in each
-        // commented out line prevents non logged in users from seeing notes 
+        // Commented out line prevents non logged in users from seeing notes 
         //if (!$log_user->is_logged_in()) {$notes_ar=array();}
         if (sizeof($output_ar)>0){
             print "<TR>";
             for ($i=0;$i<sizeof($output_ar);$i++)
             {
-
                 print "<TD ".($notes_ar[$i]?"title=\"".$notes_ar[$i]."\" class=\"datanote\">":">")."$output_ar[$i]</TD>";
             }
             //if ($log_user->is_logged_in()) {print "<TD><a href='add_measurement.php?action=edit&waterbodyid=".$_GET['waterbodyid']."&siteid=".$_GET['siteid']."&date=".$output_ar[0]."'>edit</a></TD>";}
