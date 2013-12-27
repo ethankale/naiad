@@ -46,8 +46,11 @@ require_once 'includes/qp_header.php';
     
     <tr id="meas_storet";       style="display:none;"> <td>&nbsp;</td><td><input type="checkbox" name="storet_output" value="true"  onclick="show_eq_proj(this.checked)">EQUiS Output Format</td></tr>
     <tr id="meas_storet_proj"   style="display:none;"> <td>&nbsp;</td><td>Project*: <select name="storet_proj_id"><option value="ANY">ANY</option>
+    <tr id="meas_profile"; >                           <td>&nbsp;</td><td><input type="checkbox" name="lake_profiles" id="lake_profiles" value="1" onclick="show_lake_measurements(this.checked)">Profile Measurements</td></tr>
+    <tr> <td>&nbsp;</td> <td><hr /></td></tr>
     <tr id="checkall";          style="display:none;"> <td>&nbsp;</td><td><input type="checkbox" id="check_all" value="false">Check All Measurements</td></tr>
-
+    <tr> <td>&nbsp;</td> <td>&nbsp;</td></tr>
+    
     <?php 
         $sql_proj = "SELECT * FROM mon_projects WHERE active=1 ORDER BY proj_id"; 
         $res_proj = mysqli_query($mysqlid,$sql_proj);
@@ -58,9 +61,10 @@ require_once 'includes/qp_header.php';
     ?>
 
     </select>
-    <br><br></td></tr>
-    <tr id="meas_profile"; ><td>&nbsp;</td><td><input type="checkbox" name="lake_profiles" id="lake_profiles" value="1" onclick="show_lake_measurements(this.checked)">Profile Measurements</td></tr>
-</tbody>
+    </tbody>
+
+<br /><br />
+
 <tbody id="measure_select" style="display: none">
     
     <!--<tr id="select_all_tr" >
@@ -313,6 +317,10 @@ function show_measurements()
         else
         {
             $("#measure_select, .measure_options, #checkall").show("fast");
+        }
+        
+        if ($('#wbody_type_l').is(':checked')) {
+            $('#meas_profile').show("fast");
         }
         
         if(document.getElementById('f1').wbody_type[0].checked ) {
