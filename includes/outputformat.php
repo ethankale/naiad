@@ -98,7 +98,7 @@ function output_row ($type,$values_ar,$values_type){
     $log_user   = &$GLOBALS["log_user"];
     $output_ar  = array();
     $notes_ar   = array();
-    $edit_link  = $values_ar["edit_link"];
+    $edit_link  = isset($values_ar["edit_link"]) ? $values_ar["edit_link"] : null;
     unset($values_ar["edit_link"]);
     $values     = array_values($values_ar);
     
@@ -154,7 +154,8 @@ function output_row ($type,$values_ar,$values_type){
             print "<TR>";
             for ($i=0;$i<sizeof($output_ar);$i++)
             {
-                print "<TD ".($notes_ar[$i]?"title=\"".$notes_ar[$i]."\" class=\"datanote\">":">")."$output_ar[$i]</TD>";
+                $notesArr = isset($notes_ar[$i]) ? $notes_ar[$i] : null;
+                print "<TD ".($notesArr ? "title=\"".$notesArr."\" class=\"datanote\">" : ">")."$output_ar[$i]</TD>";
             }
             //if ($log_user->is_logged_in()) {print "<TD><a href='add_measurement.php?action=edit&waterbodyid=".$_GET['waterbodyid']."&siteid=".$_GET['siteid']."&date=".$output_ar[0]."'>edit</a></TD>";}
             if ($edit_link && $log_user->is_logged_in())
@@ -170,9 +171,10 @@ function output_row ($type,$values_ar,$values_type){
             print "$output_ar[0],";
             for ($i=1;$i<(sizeof($output_ar)-1);$i++)
             {
-                print "$output_ar[$i],$notes_ar[$i],";
+                $notesArr   = isset($notes_ar[$i]) ? $notes_ar[$i] : null;
+                print "$output_ar[$i],$notesArr,";
             }
-            print "$output_ar[$i],$notes_ar[$i]\n";
+            print "$output_ar[$i],$notesArr\n";
         }
     }
 }
