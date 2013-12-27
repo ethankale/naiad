@@ -59,7 +59,7 @@ require_once 'includes/qp_header.php';
 
     </select>
     <br><br></td></tr>
-    <tr id="meas_profile"; style="display:none;"><td>&nbsp;</td><td><input type="checkbox" name="lake_profiles" id="lake_profiles" value="1" onclick="show_lake_measurements(this.checked)"> Profile Measurements</td></tr>
+    <tr id="meas_profile"; ><td>&nbsp;</td><td><input type="checkbox" name="lake_profiles" id="lake_profiles" value="1" onclick="show_lake_measurements(this.checked)">Profile Measurements</td></tr>
 </tbody>
 <tbody id="measure_select" style="display: none">
     

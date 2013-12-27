@@ -172,9 +172,9 @@ function output_row ($type,$values_ar,$values_type){
             for ($i=1;$i<(sizeof($output_ar)-1);$i++)
             {
                 $notesArr   = isset($notes_ar[$i]) ? $notes_ar[$i] : null;
-                print "$output_ar[$i],$notesArr,";
+                print "$output_ar[$i],".($notesArr ? $notesArr : "").",";
             }
-            print "$output_ar[$i],$notesArr\n";
+            print "$output_ar[$i],".(isset($notes_ar[$i]) ? $notes_ar[$i] : "")."\n";
         }
     }
 }

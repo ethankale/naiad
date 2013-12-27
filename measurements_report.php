@@ -49,8 +49,6 @@ $headers            = array("Site ID", "Day");   //column headers for output; si
 $bind_param         = array();   //array to hold the parameters to bind for the main search
 $bind_param_type    = "";        //string to define types for bound parameters
 
-//$headers[]="Site ID";
-//$headers[1]="Day";
 if ($profile) {$headers[]="Depth";}
 
 //import siteid and measurement_types to local arrays
@@ -289,7 +287,7 @@ foreach ($sites as $siteid)
     
     foreach ($fulldata as $row) {
         
-        if ($row["time"] == $oldday) {
+        if ($row["time"] == $oldday && $output_type!=OF_CSV) {
             $row["time"]="";
         }else $oldday=$row["time"];
         

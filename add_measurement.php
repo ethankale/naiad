@@ -42,9 +42,6 @@ $factionPost    = isset($_POST['faction']) ? $_POST['faction'] : null;
 $editPost       = isset($_POST['edit']) ? $_POST['edit'] : null;
 $siteidGet      = isset($_GET['siteid']) ? $_GET['siteid'] : null;
 $mtimeGet       = isset($_GET['mtime']) ? $_GET['mtime'] : null;
-$sdatePost      = isset($_POST['sdate']) ? $_POST['sdate'] : null;
-$stimePost      = isset($_POST['stime']) ? $_POST['stime'] : null;
-$depthPost      = isset($_POST['depth']) ? $_POST['depth'] : null;
 $collectByPost  = isset($_POST['collected_by']) ? $_POST['collected_by'] : null;
 
 $wbody_type     = null;
@@ -70,7 +67,7 @@ if($factionGet=="edit" && $siteidGet && $mtimeGet)
     
     $_POST['waterbody_id']  = $waterbody_id;
     $_POST['wbody_type']    = $wbody_type;
-    $_POST['siteid']        = $siteid;
+    $_POST['siteid']        = isset($siteid) ? $siteid : $siteidGet ;
     
     if (!strpos($mtimeGet, ":"))
     {
@@ -98,11 +95,11 @@ if($factionGet=="edit" && $siteidGet && $mtimeGet)
     mysqli_stmt_bind_result($load_stmt, $m_id, $mtime,$value,$detection_limit,$depth, $duplicate, $collection_proc, $lab_id, $lab_sample_id, $mnotes, $siteid, $mtypeid, $gear_id, $proj_id, $proc_id, $collected_by);
     
     while(mysqli_stmt_fetch($load_stmt)) {
-        $_POST['depth']=round($depth,6);
+        $_POST['depth']         = round($depth,6);
         list($_POST['sdate'],$_POST['stime'])=explode(" ", $mtime);
-        $_POST['siteid']        =$siteid;
-        $_POST['proc_id']       =$proc_id;
-        $_POST['collected_by']  =$collected_by;
+        $_POST['siteid']        = $siteid;
+        $_POST['proc_id']       = $proc_id;
+        $_POST['collected_by']  = $collected_by;
         if ($duplicate) {
             $_POST['dup_'.$mtypeid]         = "true";
             $_POST['d_val_'.$mtypeid]       = ($detection_limit?"<":"").sprintf("%.5f",$value);
@@ -170,7 +167,7 @@ if ($act_input)
     }
     if (!strpos($_POST['stime'], ":"))
     {
-        $_POST['stime']=substr($_POST['stime'], 0,(strlen($_POST['stime'])-2)).":".substr($_POST['stime'],-2);
+        $_POST['stime'] = substr($_POST['stime'], 0,(strlen($_POST['stime'])-2)).":".substr($_POST['stime'],-2);
     }
     $mtime = $_POST['sdate']." ".$_POST['stime'];
     $depth = $_POST['depth'];
@@ -215,13 +212,13 @@ if ($act_input)
  * Enter each element for each type into a multidimensional array, $inserts, with the mtypeid as the main key, and col names from measurements as second index
  */    
     foreach ($meas_types as $measurement) {
-        $val = $_POST["val_".$measurement["mtypeid"]];
+        $val = isset($_POST["val_".$measurement["mtypeid"]]) ? $_POST["val_".$measurement["mtypeid"]] : "";
 
         $procMeasPost   = isset($_POST["proc_".$measurement["mtypeid"]]) ? $_POST["proc_".$measurement["mtypeid"]] : null;
         $midMeasPost    = isset($_POST["mid_".$measurement["mtypeid"]]) ? $_POST["mid_".$measurement["mtypeid"]] : null;
         $dupMeasPost    = isset($_POST["dup_".$measurement["mtypeid"]]) ? $_POST["dup_".$measurement["mtypeid"]] : null;
 
-        if (!isset($_POST["val_".$measurement["mtypeid"]]) || $val==="")
+        if ($val==="")
         {
             if ($midMeasPost) $delete_keys[]=$_POST["mid_".$measurement["mtypeid"]];
             continue;// no value enter continue to next measurement type
@@ -432,6 +429,11 @@ if ($act_wbody) {
 }
 else if ($act_wbtype) print "<option value=''>Select a waterbody</option>\n";
 else print "<option value=''>Select a waterbody type</option>\n";
+
+$sdatePost = isset($_POST['sdate']) ? $_POST['sdate'] : null;
+$stimePost = isset($_POST['stime']) ? $_POST['stime'] : null;
+$depthPost = isset($_POST['depth']) ? $_POST['depth'] : null;
+
 ?>
 
 </select></td></tr>
@@ -550,37 +552,37 @@ if ($act_wbody)
         //Header
         print " <tr id='$mtypeid"."_h' ><th colspan=3 style=\"width:400px\" class='meas_head' >$mtypeid</th></tr> \n";
         print " <tr id='$mtypeid"."_userData' > <td class='subhead'>$updateInfo</td>\n";
-        print "<tbody id='$mtypeid"."_vals' $displayMeasurementType>";
+        print "<tbody id='$mtypeid"."_vals' style='$disp' $displayMeasurementType>";
         //Value
-        print " <tr id='$mtypeid"."_1' style='$disp'>\n  <td class='tdright'>&nbsp</td>\n";
+        print " <tr id='$mtypeid"."_1' style=''>\n  <td class='tdright'>&nbsp</td>\n";
         print "   <td width='75px'>Value:</td> <td width='300px'><input name=\"val_$mtypeid\" type=\"text\" style=\"width:60px\" maxlength=\"8\" value=\"".((key_exists("detection_limit",$entry)&&$entry["detection_limit"])?"<":"").(key_exists("value",$entry)?$entry['value']:"")."\"><span class='units'>".$mtrow[2]."</span></td></tr>\n";
         //Duplicate checkbox
-        print " <tr id='$mtypeid"."_2' style='$disp'>\n <td class='tdright'>&nbsp</td>\n";
+        print " <tr id='$mtypeid"."_2' style=''>\n <td class='tdright'>&nbsp</td>\n";
         print "   <td width='75px'>Dup:</td> <td><input type='checkbox' name='dup_$mtypeid' id='dup_$mtypeid' value='true' ".((isset($d_entry["duplicate"]) ? $d_entry["duplicate"] : null)==1?"checked":"")." onchange=\"show_dup(this.checked,'$mtypeid' )\" ></td></tr>\n";
         //Lab Sample ID
-        print " <tr id='$mtypeid"."_3' style='$disp' >\n  <td class='tdright'>&nbsp;</td>\n";
+        print " <tr id='$mtypeid"."_3' style='' >\n  <td class='tdright'>&nbsp;</td>\n";
 //        print "   <td width='80px'>Procedure:</td><td colspan=3> <input name=\"proc_$mtypeid\" type=\"text\" style=\"width:280px\" value='".(key_exists("collection_proc",$entry)?$entry['collection_proc']:$mtrow[3])."'>\n";
         print "   <td width='75px'>Lab Sample ID: </td> <td><input name=\"lab_s_id_$mtypeid\" type=\"text\" style=\"width:60px\" value=\"".(key_exists("lab_sample_id",$entry)?$entry['lab_sample_id']:"")."\"></td></tr>\n";    
         //Gear
-        print " <tr id='$mtypeid"."_4' style='$disp' >\n  <td class='tdright'>&nbsp;</td>\n";
+        print " <tr id='$mtypeid"."_4' style='' >\n  <td class='tdright'>&nbsp;</td>\n";
         print "   <td width='75px'>Gear: </td> <td><select name=\"gear_$mtypeid\" style=\"width:290px\">\n<option value=''></option>";
             $gear_def = key_exists("gear_id",$entry)?$entry['gear_id']:$mtrow[3];
             for ($gpi=0;$gpi < $sgar; $gpi++) 
                 {print "<option value='".$gear_ar[$gpi]."'".($gear_def==$gear_ar[$gpi]?" selected":"").">".$gear_ar[$gpi]."</option>"; } 
             print "</select></td></tr>\n";
         //Project
-        print " <tr id='$mtypeid"."_5' style='$disp' >\n  <td class='tdright'>&nbsp;</td>\n";
+        print " <tr id='$mtypeid"."_5' style='' >\n  <td class='tdright'>&nbsp;</td>\n";
         print "   <td width='75px'>Project: </td> <td><select name=\"proj_$mtypeid\" style=\"width:290px\">\n<option value=''></option>";
             $proj_def = key_exists("proj_id",$entry)?$entry['proj_id']:$default_project;
             for ($gpi=0;$gpi < $spar; $gpi++) 
                 {print "<option value='".$proj_ar[$gpi]."'".($proj_def==$proj_ar[$gpi]?" selected":"").">".$proj_ar[$gpi]."</option>"; } 
             print "</select></td></tr>\n";
         //Lab
-        print " <tr id='$mtypeid"."_6' style='$disp' >\n  <td class='tdright'>&nbsp;</td>\n";
+        print " <tr id='$mtypeid"."_6' style='' >\n  <td class='tdright'>&nbsp;</td>\n";
         print "   <td width='75px'>Lab: </td> <td><input name=\"labid_$mtypeid\" type=\"text\" style=\"width:290px\" maxlength='8' value='".(key_exists("lab_id",$entry)?$entry['lab_id']:$default_lab_id)."'></td>\n";
         print " </tr>\n";
         //Notes
-        print " <tr id='$mtypeid"."_7' style='$disp' class='brow'>\n <td class='tdright'>&nbsp</td>\n";
+        print " <tr id='$mtypeid"."_7' style='' class='brow'>\n <td class='tdright'>&nbsp</td>\n";
         print "   <td>Notes: </td> <td><input name=\"note_$mtypeid\" type=\"text\" style=\"width:290px\" value=\"".(key_exists("mnotes",$entry)?$entry['mnotes']:"")."\"></td></tr>\n";
         
         //Admin and error stuff
@@ -655,7 +657,7 @@ if ($act_wbody)
         print " <tr id='$mtypeid"."_13'  class='brow'>\n  <td class='tdright'>&nbsp</td>\n";
         print "   <td>Notes: </td> <td><input name=\"d_note_$mtypeid\" type=\"text\" style=\"width:290px\" value=\"".(key_exists("mnotes",$d_entry)?$d_entry['mnotes']:"")."\"></td></tr>\n";
         
-        if ($act_edit && $d_entry['m_id'])
+        if ($act_edit && isset($d_entry['m_id']))
         {
             print "<input type=\"hidden\" name=\"d_mid_$mtypeid\" value=\"".(key_exists("m_id",$d_entry)?$d_entry['m_id']:"")."\">\n";
         }
@@ -743,23 +745,11 @@ function show_dup(tf,row)
 {
     if (tf) 
     {
-        
-        //$("#"+row+'_h2').show();
         $("#" + row + '_dupVals').show();
-        //for (i=8; i<14; i=i+1)
-        //{
-        //    $("#" + row + "_" + i.toString()).show();
-        //}
     }
     else 
     {
-        
-        //$("#"+row+'_h2').hide("fast");
         $("#" + row + '_dupVals').hide();
-        //for (i=8; i<14; i=i+1)
-        //{
-        //    $("#" + row + "_" + i.toString()).hide();
-        //}
     }
 }
 
@@ -768,10 +758,9 @@ function toggle_row(row)
     if (($("#" + row + "_1 input").val() == ""))
     {
         $("#" + row + "_vals").toggle();
+        //console.log(row);
     }
 }
-
-
 
 </script>
 

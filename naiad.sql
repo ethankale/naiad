@@ -59,6 +59,7 @@ CREATE TABLE IF NOT EXISTS `measurements` (
   `collected_by` varchar(15) DEFAULT NULL,
   `user_entry` int(11) DEFAULT NULL,
   `user_update` int(11) DEFAULT NULL,
+  `profile` ENUM( 'top', 'middle', 'bottom' ) DEFAULT NULL,
   PRIMARY KEY (`m_id`),
   KEY `siteid` (`siteid`),
   KEY `mtypeid` (`mtypeid`),
@@ -67,6 +68,7 @@ CREATE TABLE IF NOT EXISTS `measurements` (
   KEY `FK_gear_id` (`gear_id`),
   KEY `mtime` (`mtime`),
   KEY `depth` (`depth`),
+  KEY `profile` (`profile`),
   KEY `value` (`value`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=740802 ;
 

@@ -11,7 +11,10 @@ require_once 'includes/qp_header.php';
 login_check($pagelevel, $log_user);
 
 // if POST form submission update the Measurement type
-if ($_POST['submit']=="Submit" && ($_POST['action']=="new" || $_POST['action']=="edit"))
+$submitPost = isset($_POST['submit']) ? $_POST['submit'] : null;
+$actionGet  = isset($_GET['action']) ? $_GET['action'] : null;
+
+if ($submitPost=="Submit" && ($_POST['action']=="new" || $_POST['action']=="edit"))
 {
     $throw_error=false;
     if($_POST['action']=="new") 
@@ -31,28 +34,28 @@ if ($_POST['submit']=="Submit" && ($_POST['action']=="new" || $_POST['action']==
         mysqli_stmt_bind_param($stmt, 'ssssiisddiisddiiss', $mtypeid, $mtname, $storet_header, $units, $lake, $stream, $l_collection_method, $l_lower_bound, $l_upper_bound, $l_profile, $l_multi_depth, $s_collection_method, $s_lower_bound, $s_upper_bound, $active, $disp_order, $notes, $oldmtypeid);
         $oldmtypeid=$_POST['oldmtypeid'];
     }
-    $mtypeid=$_POST['mtypeid'];
-    $siteid=$_POST['siteid'];
-    $mtname=$_POST['mtname'];
-    $storet_header=$_POST['storet_header'];
-    $units=$_POST['units'];
-    $lake=($_POST['lake']==1)?1:0;
-    $stream=($_POST['stream']==1)?1:0;
-    $l_collection_method=$_POST['l_collection_method'];
-    $l_lower_bound=$_POST['l_lower_bound'];
+    $mtypeid            = $_POST['mtypeid'];
+    $siteid             = $_POST['siteid'];
+    $mtname             = $_POST['mtname'];
+    $storet_header      = $_POST['storet_header'];
+    $units              = $_POST['units'];
+    $lake               = ($_POST['lake']==1) ? 1 : 0;
+    $stream             = ($_POST['stream']==1) ? 1 : 0;
+    $l_collection_method= $_POST['l_collection_method'];
+    $l_lower_bound      = $_POST['l_lower_bound'];
     if ($_POST['l_lower_unbound']=="true") {$l_lower_bound=NULL;}
-    $l_upper_bound=$_POST['l_upper_bound'];
+    $l_upper_bound      = $_POST['l_upper_bound'];
     if ($_POST['l_upper_unbound']=="true") {$l_upper_bound=NULL;}
-    $l_profile=($_POST['l_profile']==1)?1:0;
-    $l_multi_depth=($_POST['l_multi_depth']==1)?1:0;
-    $s_collection_method=$_POST['s_collection_method'];
-    $s_lower_bound=$_POST['s_lower_bound'];
+    $l_profile          = ($_POST['l_profile']==1) ? 1  :0;
+    $l_multi_depth      = ($_POST['l_multi_depth']==1) ? 1 : 0;
+    $s_collection_method= $_POST['s_collection_method'];
+    $s_lower_bound      = $_POST['s_lower_bound'];
     if ($_POST['s_lower_unbound']=="true") {$s_lower_bound=NULL;}
-    $s_upper_bound=$_POST['s_upper_bound'];
-	if ($_POST['s_upper_unbound']=="true") {$s_upper_bound=NULL;}
-    $active=($_POST['active']==1)?1:0;
-    $disp_order=$_POST['disp_order'];
-    $notes=$_POST['notes'];
+    $s_upper_bound      = $_POST['s_upper_bound'];
+    if ($_POST['s_upper_unbound']=="true") {$s_upper_bound=NULL;}
+    $active             = ($_POST['active']==1) ? 1 : 0;
+    $disp_order         = $_POST['disp_order'];
+    $notes              = $_POST['notes'];
     
     mysqli_stmt_execute($stmt);
     if (mysqli_stmt_errno($stmt)){ 
@@ -63,9 +66,11 @@ if ($_POST['submit']=="Submit" && ($_POST['action']=="new" || $_POST['action']==
 }
 
 // if get fields submitted display entry form - prefilled with data if an edit
-if ($_GET['action']=="new" || $_GET['action']=="edit")
+
+if ($actionGet=="new" || $actionGet=="edit")
 {
     $action_descriptor = "New";
+    
     if ($_GET['action']=="edit" && $_GET['mtypeid'])
     {
         $action_descriptor = "Edit";
@@ -77,7 +82,8 @@ if ($_GET['action']=="new" || $_GET['action']=="edit")
         mysqli_stmt_bind_result($stmt, $mtypeid, $mtname, $storet_header, $units, $lake, $stream, $l_collection_method, $l_lower_bound, $l_upper_bound, $l_profile, $l_multi_depth, $s_collection_method, $s_lower_bound, $s_upper_bound, $active, $disp_order, $notes);
         mysqli_stmt_fetch($stmt);
         mysqli_stmt_close($stmt);
-        
+    } elseif ($_GET['action']=="new") {
+        $mtypeid = $mtname = $storet_header = $units = $lake = $stream = $l_collection_method = $l_lower_bound = $l_upper_bound = $l_profile = $l_multi_depth = $s_collection_method = $s_lower_bound = $s_upper_bound = $active = $disp_order = $notes = null;
     }
     ?>
 
@@ -91,13 +97,13 @@ if ($_GET['action']=="new" || $_GET['action']=="edit")
     <h2><?php print $action_descriptor; ?> Measurement Type</h2>
     
     <table style="width:650px">
-	<tr><td class="tdright">Measurement Type Name</td><td><input name="mtname" type="text" style="width:200px" maxlength="255" value="<?php print "$mtname";?>"></td></tr>
-	<tr><td class="tdright">Type Abbreviation</td><td><input name="mtypeid" type="text" style="width:60px" maxlength="7" value="<?php print "$mtypeid";?>"></td></tr>
-	<tr><td class="tdright">EQUiS Column Header</td><td><input name="storet_header" type="text" style="width:200px" maxlength="255" value="<?php print "$storet_header";?>"></td></tr>
+    <tr><td class="tdright">Measurement Type Name</td><td><input name="mtname" type="text" style="width:200px" maxlength="255" value="<?php print "$mtname";?>"></td></tr>
+    <tr><td class="tdright">Type Abbreviation</td><td><input name="mtypeid" type="text" style="width:60px" maxlength="7" value="<?php print "$mtypeid";?>"></td></tr>
+    <tr><td class="tdright">EQUiS Column Header</td><td><input name="storet_header" type="text" style="width:200px" maxlength="255" value="<?php print "$storet_header";?>"></td></tr>
         <tr><td class="tdright">Units</td><td><input name="units" type="text" style="width:60px" maxlength="100" value="<?php print "$units";?>"></td></tr>
         <tr><td class="tdright">Type available for:</td><td><input type="checkbox" name="lake" value="1" <?php if ($lake== 1) print " checked"?>> Lakes<br>
              <input type="checkbox" name="stream" value="1" <?php if ($stream== 1) print " checked"?>> Streams</td></tr>
-	<tr><td class="tdright">Lake Default Gear</td><td><input name="l_collection_method" type="text" style="width:400px" value="<?php print "$l_collection_method";?>"></td></tr>
+    <tr><td class="tdright">Lake Default Gear</td><td><input name="l_collection_method" type="text" style="width:400px" value="<?php print "$l_collection_method";?>"></td></tr>
         <tr><td class="tdright">Lake - Lower Bound</td><td><input name="l_lower_bound" type="text" style="width:80px" maxlength="10" value="<?php if($l_lower_bound || $l_lower_bound===0.0) printf("%.5f",$l_lower_bound);?>">
             <input type="checkbox" name="l_lower_unbound" value="true" <?php if ($l_lower_bound===NULL) print " checked"?>> Unbounded</td></tr>
         <tr><td class="tdright">Lake - Upper Bound</td><td><input name="l_upper_bound" type="text" style="width:80px" maxlength="10" value="<?php if($l_upper_bound || $l_upper_bound===0.0) printf("%.5f",$l_upper_bound);?>">
@@ -105,7 +111,7 @@ if ($_GET['action']=="new" || $_GET['action']=="edit")
         <tr><td class="tdright"></td><td><input type="checkbox" name="l_profile" value="1" <?php if ($l_profile== 1) print " checked"?>> Lake Profile Data</td></tr>
         <tr><td class="tdright"></td><td><input type="checkbox" name="l_multi_depth" value="1" <?php if ($l_multi_depth== 1) print " checked"?>> Lake Multiple Depth Data</td></tr>    
 
-	<tr><td class="tdright">Stream Default Gear</td><td><input name="s_collection_method" type="text" style="width:400px" value="<?php print "$s_collection_method";?>"></td></tr>
+    <tr><td class="tdright">Stream Default Gear</td><td><input name="s_collection_method" type="text" style="width:400px" value="<?php print "$s_collection_method";?>"></td></tr>
         <tr><td class="tdright">Stream - Lower Bound</td><td><input name="s_lower_bound" type="text" style="width:80px" maxlength="10" value="<?php if($s_lower_bound || $s_lower_bound===0.0) printf("%.5f",$s_lower_bound);?>">
             <input type="checkbox" name="s_lower_unbound" value="true" <?php if ($s_lower_bound===NULL) print " checked"?>> Unbounded</td></tr>
         <tr><td class="tdright">Stream - Upper Bound</td><td><input name="s_upper_bound" type="text" style="width:80px" maxlength="10" value="<?php if($s_upper_bound || $s_upper_bound===0.0) printf("%.5f",$s_upper_bound);?>">
@@ -139,7 +145,7 @@ $group="";
 while ($row = mysqli_fetch_array($res, MYSQLI_ASSOC))
 {
     print "<tr><td>".$row['mtypeid']."</td><td>".$row['mtname']."</td>
-		<td><a href=\"meas_types.php?action=edit&mtypeid=".urlencode($row['mtypeid'])."\">edit</a></td></tr>";
+        <td><a href=\"meas_types.php?action=edit&mtypeid=".urlencode($row['mtypeid'])."\">edit</a></td></tr>";
     
 }
 
