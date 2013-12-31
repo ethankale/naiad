@@ -7,7 +7,7 @@ $con = new PDO("mysql:host=$dbserver;dbname=$dbschema", $dbuser, $dbpass);
 
 $json   = '';
 $qry    = '';
-$sites  = [];
+$sites  = array();
 
 // Get site info, either from supplied list of IDs or all sites.
 if (isset($_GET["siteid"])) {

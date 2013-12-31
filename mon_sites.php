@@ -209,7 +209,7 @@ $(document).ready(function() {
         attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
 
-    url = "/naiad/mon_sites_ajax.php";
+    url = "./mon_sites_ajax.php";
     $.getJSON( url, function( data ) {
 
         lats = [];
