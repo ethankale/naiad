@@ -188,10 +188,65 @@ function delete_site (form_sub)
 
 ?>
 
+<h1>Monitoring Sites</h1>
+
+<div id="map">
+&nbsp;
+</div>
+
+<script language="javascript">
+
+var sites   = [];
+var map     = '';
+var lats    = [];
+var lons    = [];
+
+$(document).ready(function() {
+
+    // Add the map to the document.  MUST come after the #map div.
+    map = L.map('map').setView([44, -93.5], 6);
+    L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    url = "/naiad/mon_sites_ajax.php";
+    $.getJSON( url, function( data ) {
+
+        lats = [];
+        lons = [];
+        
+        $.each( data, function( key, val ) {
+            sites.push(val);
+            
+            var lat = parseFloat(val.latitude);
+            var lon = parseFloat(val.longitude);
+            
+            lats.push(lat);
+            lons.push(lon);
+            
+            var marker = L.marker([lat, lon]).addTo(map);
+            marker.bindPopup("<b>" + val.siteid + "</b><br />" + val.site_description);
+            
+        });
+        
+        // Find the minimum & maximum extent
+        minLat = Math.min.apply(Math, lats);
+        maxLat = Math.max.apply(Math, lats);
+        minLon = Math.min.apply(Math, lons);
+        maxLon = Math.max.apply(Math, lons);
+        
+        map.fitBounds([[minLat, minLon],[maxLat,maxLon]]);
+        
+    });
+
+});
+
+</script>
+
 <table width="500px" class="listtable">
-<tr><th colspan=3>Monitoring Sites</th></tr>
 
 <tbody><tr><td colspan=3><a href="mon_sites.php?faction=new">New Monitoring Site</a></td></tr>
+
 <?php 
 $mt_tr=array();
 $mt_types=array();

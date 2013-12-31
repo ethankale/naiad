@@ -9,7 +9,7 @@ $json = '';
 
 //Get a list of measurements taken at the selected sites
 
-$sites=$_GET["siteid"];
+$sites  = isset($_GET["siteid"]) ? $_GET["siteid"] : null;
 
 $sitessql = implode("','", $sites);
 

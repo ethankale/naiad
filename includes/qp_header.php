@@ -2,13 +2,21 @@
 <head><title><?php print $page_title;?></title>
 <link href="public.css" type="text/css" rel="stylesheet">
 <script src="includes/jquery-1.6.1.min.js"></script>
+
+<!-- Calendar javascript library -->
 <script src="includes/calendar.js"></script>
 <link href="includes/calendar.css" rel="stylesheet">
+
+<!-- Leaflet (mapping) javascript library -->
+<script src="http://cdn.leafletjs.com/leaflet-0.7.1/leaflet.js"></script>
+<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.1/leaflet.css" />
+
+
 <script language="javascript">
 function plot_pop(url)
 {
-	window.open(url,'MCWD_graph','width=660,height=460');
-			//,scrollbars=no,toolbar=no,menubar=no,directories=no');
+    window.open(url,'MCWD_graph','width=660,height=460');
+            //,scrollbars=no,toolbar=no,menubar=no,directories=no');
 }
 </script>
 </head>
