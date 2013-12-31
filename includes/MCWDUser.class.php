@@ -122,9 +122,9 @@ class MCWDUser{
         $userinfo=$this->user_info($uid);
         if ($userinfo['userID'])
         {
-            $this->userID=$userinfo['userID'];
-            $this->email=$userinfo['email'];
-            $this->admin=$userinfo['is_admin'];
+            $this->userID   = $userinfo['userID'];
+            $this->email    = $userinfo['email'];
+            $this->admin    = $userinfo['is_admin'];
         }
     }
 
