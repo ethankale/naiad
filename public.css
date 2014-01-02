@@ -128,13 +128,17 @@ TABLE.listtable {
     padding-left:5px;
 }
 
+TABLE.listtable .table_entries TD {
+    padding-left:   10px;
+}
+
 TABLE.listtable .table_entries TR:hover {
     background-color:   #ededed;
 }
 
 TABLE.listtable TD{
     font-size:      1em;
-    padding-bottom: 5px;
+    padding-bottom: 10px;
     padding-right:  5px;
     vertical-align: top;
 }

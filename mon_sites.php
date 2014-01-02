@@ -205,8 +205,15 @@ $(document).ready(function() {
 
     // Add the map to the document.  MUST come after the #map div.
     map = L.map('map').setView([44, -93.5], 6);
-    L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+    
+    
+    // L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+        // attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+    // }).addTo(map);
+
+    L.tileLayer('http://{s}.mqcdn.com/tiles/1.0.0/sat/{z}/{x}/{y}.jpg', {
+        subdomains: ["oatile1", "oatile2", "oatile3", "oatile4"],
+        attribution: 'Tiles courtesy of <a href="http://www.mapquest.com/" target="_blank">MapQuest</a>. Map data (c) <a href="http://www.openstreetmap.org/" target="_blank">OpenStreetMap</a> contributors, CC-BY-SA.'
     }).addTo(map);
 
     url = "./mon_sites_ajax.php";

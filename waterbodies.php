@@ -70,8 +70,8 @@ if ($theFactionGet=="new" || $theFactionGet=="edit")
         mysqli_stmt_bind_result($stmt, $waterbody_id,$wbody_type,$wbody_name,$DNR_LAKE_ID);
         mysqli_stmt_fetch($stmt);
         mysqli_stmt_close($stmt);
-        
-        
+    } elseif ($theFactionGet=="new") {
+        $waterbody_id = $wbody_type = $wbody_name = $DNR_LAKE_ID ='';
     }
     ?>
     <form action="waterbodies.php" name="f1" id="f1" method="POST">
@@ -128,32 +128,31 @@ function delete_site (form_sub)
 }
 
 </script>
-    <?php
+<?php
     $def_vis="none";
 }
-
 
 ?>
 
 <table width="500px" class="listtable">
 <tr><th colspan=3>Waterbodies</th></tr>
 
-<tbody><tr><td colspan=2><a href="waterbodies.php?faction=new">New Waterbody</a></td></tr>
+<tbody class=table_entries><tr><td colspan=2><a href="waterbodies.php?faction=new">New Waterbody</a></td></tr>
 <?php 
-$mt_tr=array();
-$mt_types=array();
-$query = "SELECT * FROM waterbodies ORDER BY wbody_name ASC";
-$res = mysqli_query($mysqlid, $query);
-$group="";
-while ($row = mysqli_fetch_array($res, MYSQLI_ASSOC))
-{
-    print "<tr><td>".$row['wbody_name']."</td>
-        <td><a href=\"waterbodies.php?faction=edit&waterbody_id=".$row['waterbody_id']."\">edit</a></td></tr>";
-    
-}
+    $mt_tr=array();
+    $mt_types=array();
+    $query = "SELECT * FROM waterbodies ORDER BY wbody_name ASC";
+    $res = mysqli_query($mysqlid, $query);
+    $group="";
+    while ($row = mysqli_fetch_array($res, MYSQLI_ASSOC))
+    {
+        print "<tr><td>".$row['wbody_name']."</td>
+            <td><a href=\"waterbodies.php?faction=edit&waterbody_id=".$row['waterbody_id']."\">edit</a></td></tr>";
+        
+    }
 
+    mysqli_free_result($res);
 
-mysqli_free_result($res);
 ?></tbody>
 </table>
 
