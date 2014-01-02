@@ -99,7 +99,7 @@ if ($theFactionGet=="new" || $theFactionGet=="edit")
     ?>
     <h2><?php print $action_descriptor; ?> Monitoring Site</h2>
     <table style="width:550px">
-    <tr><td class="tdright">MCWD Site ID</td><td><input name="siteid" type="text" style="width:60px" maxlength="7" value="<?php print "$siteid";?>"></td></tr>
+    <tr><td class="tdright">Site ID</td><td><input name="siteid" type="text" style="width:60px" maxlength="7" value="<?php print "$siteid";?>"></td></tr>
     <tr><td class="tdright">Latitiude</td><td><input name="latitude" type="text" style="width:80px" maxlength="10" value="<?php printf("%.5f",$latitude);?>"></td></tr>
     <tr><td class="tdright">Longitude</td><td><input name="longitude" type="text" style="width:80px" maxlength="10" value="<?php printf("%.5f",$longitude);?>"></td></tr>
     <tr><td class="tdright">Site Description</td><td><input name="site_description" type="text" style="width:400px" value="<?php print "$site_description";?>"></td></tr>
@@ -245,7 +245,7 @@ $(document).ready(function() {
 
 <table width="500px" class="listtable">
 
-<tbody><tr><td colspan=3><a href="mon_sites.php?faction=new">New Monitoring Site</a></td></tr>
+<tbody><tr><td colspan=2><a href="mon_sites.php?faction=new">New Monitoring Site</a></td></tr>
 
 <?php 
 $mt_tr=array();
@@ -260,13 +260,15 @@ while ($row = mysqli_fetch_array($res, MYSQLI_ASSOC))
         if ($row["monitor_type"]=="S") $hstring="Streams";
         if ($row["monitor_type"]=="L") $hstring="Lakes";
         print "</tbody>\n";
-        print "<tr><td></td><td colspan=2><br><b>$hstring</b> &nbsp;<a href='#' onclick=\"document.getElementById('table_".$row["monitor_type"]."').style.display='';\";>Show</a>\n";
+        print "<tr><td colspan=2><br><b>$hstring</b> &nbsp;<a href='#' onclick=\"document.getElementById('table_".$row["monitor_type"]."').style.display='';\";>Show</a>\n";
         print "\t<a href='#' onclick=\"document.getElementById('table_".$row["monitor_type"]."').style.display='none';\";>Hide</a></td></tr>";
         //print "<tbody id=\"table_".$row["monitor_type"]."\" style=\"display:$def_vis\">\n";
-        print "<tbody id=\"table_".$row["monitor_type"]."\" >\n";
+        print "<tbody id=\"table_".$row["monitor_type"]."\" class=table_entries>\n";
     }
-    print "<tr><td>".$row['siteid']."</td><td>".$row['site_description']."</td>
-        <td><a href=\"mon_sites.php?faction=edit&siteid=".$row['siteid']."\">edit</a></td></tr>";
+    print "<tr>
+        <td> <a href=\"mon_sites.php?faction=edit&siteid=".$row['siteid']."\">".$row['siteid']."</a></td>
+        <td>".$row['site_description']."</td>
+      </tr>";
     
 }
 
