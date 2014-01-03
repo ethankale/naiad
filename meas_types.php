@@ -134,7 +134,8 @@ if ($actionGet=="new" || $actionGet=="edit")
 <table width="500px" class="listtable">
 <tr><th colspan=3>Measurement Types</th></tr>
 
-<tbody><tr><td colspan=3><a href="meas_types.php?action=new">New Measurement Type</a></td></tr>
+<tbody><tr><td colspan=3><a href="meas_types.php?action=new">New Measurement Type</a></td></tr></tbody>
+<tbody class="table_entries">
 <?php 
 // display list of measurement types
 $mt_tr=array();

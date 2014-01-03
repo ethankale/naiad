@@ -137,7 +137,8 @@ function delete_site (form_sub)
 <table width="500px" class="listtable">
 <tr><th colspan=3>Waterbodies</th></tr>
 
-<tbody class=table_entries><tr><td colspan=2><a href="waterbodies.php?faction=new">New Waterbody</a></td></tr>
+<tbody><tr><td colspan=2><a href="waterbodies.php?faction=new">New Waterbody</a></td></tr></tbody>
+<tbody class=table_entries>
 <?php 
     $mt_tr=array();
     $mt_types=array();
