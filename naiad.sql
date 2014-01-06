@@ -313,7 +313,9 @@ VALUES (
 '1', 'root', '0445e0d8552a5cde2a6d20203b5f9151'
 );
 
---Create some dummy data, so that the database is usable/testable.
+--
+-- Create some dummy data, so that the database is usable/testable.
+--
 INSERT INTO `naiad`.`waterbodies` (`waterbody_id`, `wbody_type`, `wbody_name`, `DNR_LAKE_ID`) VALUES (1, 'L', 'Test Waterbody', '001234');
 INSERT INTO `naiad`.`measurement_type` (`mtypeid`, `mtname`, `storet_header`, `units`, `lake`, `stream`, `l_collection_method`, `l_lower_bound`, `l_upper_bound`, `l_profile`, `l_multi_depth`, `s_collection_method`, `s_lower_bound`, `s_upper_bound`, `active`, `disp_order`, `notes`) 
   VALUES ('TP', 'Total Phosphorus', '', 'ug/L', '1', '1', NULL, '1', '250', '1', '1', NULL, '1', '500', '1', '1', 'Total Phosphorus in the water column.  Key nutrient for aquatic plants & algae.');
