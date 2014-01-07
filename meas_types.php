@@ -131,28 +131,29 @@ if ($actionGet=="new" || $actionGet=="edit")
 
 ?>
 
-<table width="500px" class="listtable">
-<tr><th colspan=3>Measurement Types</th></tr>
+<h1>Measurement Types</h1>
 
+<table width="500px" class="listtable">
 <tbody><tr><td colspan=3><a href="meas_types.php?action=new">New Measurement Type</a></td></tr></tbody>
 <tbody class="table_entries">
-<?php 
-// display list of measurement types
-$mt_tr=array();
-$mt_types=array();
-$query = "SELECT * FROM measurement_type ORDER BY active DESC, disp_order ASC";
-$res = mysqli_query($mysqlid, $query);
-$group="";
-while ($row = mysqli_fetch_array($res, MYSQLI_ASSOC))
-{
-    print "<tr><td>".$row['mtypeid']."</td><td>".$row['mtname']."</td>
-        <td><a href=\"meas_types.php?action=edit&mtypeid=".urlencode($row['mtypeid'])."\">edit</a></td></tr>";
-    
-}
+    <?php 
+    // display list of measurement types
+    $mt_tr=array();
+    $mt_types=array();
+    $query = "SELECT * FROM measurement_type ORDER BY active DESC, disp_order ASC";
+    $res = mysqli_query($mysqlid, $query);
+    $group="";
+    while ($row = mysqli_fetch_array($res, MYSQLI_ASSOC))
+    {
+        print "<tr><td>".$row['mtypeid']."</td><td>".$row['mtname']."</td>
+            <td><a href=\"meas_types.php?action=edit&mtypeid=".urlencode($row['mtypeid'])."\">edit</a></td></tr>";
+        
+    }
 
 
-mysqli_free_result($res);
-?></tbody>
+    mysqli_free_result($res);
+    ?>
+</tbody>
 </table>
 
 <?php

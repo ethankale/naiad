@@ -53,7 +53,8 @@ function output_site_info($type, $title, $text)
 
 //displays header row, html output opens table tag and displays sort arrows
 // It's very important that the $units and $cols arrays have the same number of values, in the same order
-function output_header($type, $cols, $sort=array(), $text="", $units){
+function output_header($type, $cols, $sort=array(), $text="", $units=""){
+    
     if ($type==OF_TBL){
         print "<table class=\"datatable\">\n";
         
@@ -65,12 +66,17 @@ function output_header($type, $cols, $sort=array(), $text="", $units){
             
             print "<TR>";
             print "<TH>$cols[0]</TH>";
-            for ($i=1;$i<sizeof($cols);$i++)
-            {
-                if ($sort[$i]) {
-                    print "<TH>$cols[$i] ($units[$i]) <a href=\"$link&sortkey=$sort[$i]&sortdir=DESC\"><img src=\"images/sort_arrow.png\"></a><a href=\"$link&sortkey=$sort[$i]&sortdir=ASC\"><img src=\"images/sort_arrowup.png\"></a></TH>";
+            for ($i=1;$i<sizeof($cols);$i++) {
+                
+                // There will not always be a sort field or unit field 
+                //  to match the corresponding columns field (esp. for precip).
+                $theUnit = isset($units[$i]) ? $units[$i] : "";
+                $theSort = isset($sort[$i]) ? $sort[$i] : "";
+            
+                if ($theSort) {
+                    print "<TH>$cols[$i] ($theUnit) <a href=\"$link&sortkey=$sort[$i]&sortdir=DESC\"><img src=\"images/sort_arrow.png\"></a><a href=\"$link&sortkey=$sort[$i]&sortdir=ASC\"><img src=\"images/sort_arrowup.png\"></a></TH>";
                 }
-                else print "<TH>$cols[$i] ($units[$i])</TH>";
+                else print "<TH>$cols[$i] ($theUnit)</TH>";
             }
             print "</TR>\n";
         }
@@ -83,11 +89,14 @@ function output_header($type, $cols, $sort=array(), $text="", $units){
             
             print "\"$cols[0]\",";
             
+            $theUnit = "";
+            
             for ($i=1;$i<(sizeof($cols)-1);$i++)
             {
-                print "\"$cols[$i] ($units[$i])\",\"$cols[$i] Notes\",";
+                $theUnit = isset($units[$i]) ? $units[$i] : "";
+                print "\"$cols[$i] ($theUnit)\",\"$cols[$i] Notes\",";
             }
-            print "\"$cols[$i] ($units[$i])\",\"$cols[$i] Notes\"\n";
+            print "\"$cols[$i] ($theUnit)\",\"$cols[$i] Notes\"\n";
         }
     }    
 }
