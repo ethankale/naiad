@@ -88,26 +88,21 @@ if ($report_typeGet =="raw") {
     
 }
 
+// IMPORTANT NOTE: This is a monthly average, BUT it averages from the
+//  start date to the end date, EVEN IF THAT DATE IS IN THE MIDDLE OF
+//  A MONTH.  If you want the WHOLE month, make sure that your query
+// extends from the first to the last day.
+
 if ($report_typeGet =="daily" || $report_typeGet =="monthly") {
-    if ($_GET["report_type"] =="daily") {
+    $stdate  = isset($_GET["stdate"])  ? $_GET["stdate"]  : "1980-01-01";
+    $enddate = isset($_GET["enddate"]) ? $_GET["enddate"] : "2020-12-31";
+
+    if ($report_typeGet == "daily") {
         $date_format = "%Y-%m-%d";
-        if($_GET["stdate"]) {$stdate= $_GET["stdate"];}
-        else {$stdate = "1980-01-01";}
-    
-        if($_GET["enddate"]) {$enddate= $_GET["enddate"];}
-        else {$enddate = "2020-12-31";}
-//        $view = "precip_daily_view";
-    }
-    if ($report_typeGet =="monthly") {
+    };
+    if ($report_typeGet == "monthly") {
         $date_format = "%Y-%m";
-        if($_GET["stdate"]) {$stdate= $_GET["stdate"];}
-        else {$stdate = "1980-01";}
-    
-        if($_GET["enddate"]) {$enddate= $_GET["enddate"];}
-        else {$enddate = "2020-12";}    
-//        $view = "precip_monthly_view";
-    }
-    
+    };
     
     $headers[]="date";
     if ($inGet=="true")         $headers[]="inches";
@@ -121,7 +116,9 @@ if ($report_typeGet =="daily" || $report_typeGet =="monthly") {
         max(wind_speed_mph) AS max_wind,min(wind_speed_mph) AS min_wind,avg(wind_speed_mph) AS avg_wind,avg(wind_dir) AS avg_wind_dir,
         max(pressure_mmhg) AS max_press,min(pressure_mmhg) AS min_press,avg(pressure_mmhg) AS avg_press";
     
-    $query = "SELECT $select_block from precipitation_measurements WHERE PS_ID=? and date_format(pmdate,'$date_format')>=? and date_format(pmdate,'$date_format')<=? group by date_format(pmdate,'$date_format')order by day";
+    $query = "SELECT $select_block from precipitation_measurements WHERE PS_ID=? and date_format(pmdate,'%Y-%m-%d')>=? and date_format(pmdate,'%Y-%m-%d')<=? group by date_format(pmdate,'$date_format')order by day";
+    //var_dump($report_typeGet);
+    //var_dump($query, $PS_ID, $stdate, $enddate);
     $stmt = mysqli_prepare($mysqlid, $query); 
     if($stmt==false) {printf("Errormessage: %s\n", mysqli_error($mysqlid));exit;}
     mysqli_stmt_bind_param($stmt, "sss", $PS_ID,$stdate,$enddate);    
