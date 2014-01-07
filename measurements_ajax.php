@@ -10,7 +10,7 @@ header('Content-type: application/json');
 // By default looks for surface values (between 0 & 1 meters).
 // Limits to 1,000 returns (so as not to overwhelm graphing).
 
-if (isset($_GET["mtypeid"])) {
+if (isset($_GET["mtypeid"]) && isset($_GET["siteid"])) {
 
     $con = new PDO("mysql:host=$dbserver;dbname=$dbschema", $dbuser, $dbpass);
     $json = '';
@@ -18,7 +18,7 @@ if (isset($_GET["mtypeid"])) {
     $conditions = "";
     $params     = array();
     
-    $sql = 'SELECT `value`, `mtypeid`, `monitoring_sites`.`siteid`, `waterbody_id`, `depth`, `mnotes`
+    $sql = 'SELECT `value`, `mtypeid`, date_format(`mtime`, "%Y-%m-%d") as date, `monitoring_sites`.`siteid`, `waterbody_id`, `depth`, `mnotes`
         FROM `measurements` 
         LEFT JOIN `monitoring_sites`
           ON `monitoring_sites`.`siteid` = `measurements`.`siteid`
@@ -41,11 +41,11 @@ if (isset($_GET["mtypeid"])) {
         $params['minDepth'] = $_GET["minDepth"];
     };
     if (isset($_GET["maxDate"])) {
-        $conditions = $conditions . ' AND `depth` <= :maxDate ';
+        $conditions = $conditions . ' AND `mtime` <= :maxDate ';
         $params['maxDate'] = $_GET["maxDate"];
     };
     if (isset($_GET["minDate"])) {
-        $conditions = $conditions . ' AND `depth` >= :minDate ';
+        $conditions = $conditions . ' AND `mtime` >= :minDate ';
         $params['minDate'] = $_GET["minDate"];
     };
     if (isset($_GET["wbody"])) {
@@ -54,7 +54,6 @@ if (isset($_GET["mtypeid"])) {
     };
     
     $conditions = $conditions . ' LIMIT 1000';
-
     // Prepare & execute SQL, output JSON.
     $stmt = $con->prepare($sql . $conditions);
     $stmt->execute($params);
