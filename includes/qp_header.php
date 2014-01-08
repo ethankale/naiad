@@ -27,8 +27,8 @@ print $log_user->greeting("user.php","user.php?action=logout");
 ?><br><br></div><?php } ?>
 <div class="navheader">
 <a href="measurements_form.php">Measurement data</a> |
-<a href="precip_form.php">Precipitation data</a>
-<?php if ( $log_user->is_logged_in()) { ?> | <a href="plot_form.php">Data Graphs</a><?php }?>
+<a href="precip_form.php">Precipitation data</a> |
+<a href="plot_form.php">Data Graphs</a>
 <?php if($log_user->is_logged_in()) {?> |
 <a href="add_measurement.php">Measurement entry</a> |
 <a href="upload_measurements.php">Measurement upload</a> |

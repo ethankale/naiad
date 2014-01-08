@@ -1,7 +1,7 @@
 <?php
 $page_title='Measurements Graphing';
 require_once 'includes/wqinc.php';
-$pagelevel = PAGE_USER;
+$pagelevel = PAGE_OPEN;
 
 require_once 'includes/qp_header.php';
 ?>
@@ -106,10 +106,12 @@ var svg = "";
 function updateParams() {
     var paramUrl = "apis/params_by_site.php?siteid=" + $("#siteid").val();
     $("#mtypeid").empty();
+    $("#mtypeid").prop("disabled", true);
     $.getJSON(paramUrl, function(data) {
         $.each(data, function(key, name) {
             $("#mtypeid").append("<option value='" + name["mtypeid"] + "'>" + name["mtname"] + "</option>");
         });
+        $("#mtypeid").prop("disabled", false);
     });
 };
 
@@ -172,8 +174,16 @@ function graph() {
             d.depth     = +d.depth;
         });
         
-        x.domain(d3.extent(data, function(d) { return d.theTime; }));
-        y.domain(d3.extent(data, function(d) { return d.value; })).nice();
+        //Set the x & y domains by getting the extent of values, then padding a little
+        weekInMilliseconds = 604800000;
+        xMinMax     = d3.extent(data, function(d) { return d.theTime; });
+        xMinMaxMod  = [xMinMax[0]-weekInMilliseconds, xMinMax[1]+weekInMilliseconds];
+        x.domain(xMinMaxMod);
+        
+        yMinMax     = d3.extent(data, function(d) { return d.value; });
+        yPadding    = (yMinMax[1]-yMinMax[0])/10;
+        yMinMaxMod  = [yMinMax[0]-yPadding, yMinMax[1]+yPadding];
+        y.domain(yMinMaxMod).nice();
         
         // Set the data; the second parameter "idfn" is the unique ID of each measurement.
         var points = svg.selectAll(".dot").data(data, idfn);
@@ -206,7 +216,7 @@ function graph() {
             .remove();
           
         svg.selectAll(".y.axis .label")
-            .text($("#mtypeid").val());
+            .text($("#mtypeid option:selected").text());
             
         var t = svg.transition().duration(500);
         t.select(".x.axis")

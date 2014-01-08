@@ -53,7 +53,6 @@ if (isset($_GET["mtypeid"]) && isset($_GET["siteid"])) {
         $params['wbody'] = $_GET["wbody"];
     };
     
-    $conditions = $conditions . ' LIMIT 1000';
     // Prepare & execute SQL, output JSON.
     $stmt = $con->prepare($sql . $conditions);
     $stmt->execute($params);

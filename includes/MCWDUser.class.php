@@ -117,7 +117,10 @@ class MCWDUser{
         $this->min_pass_length=MINPASSLENGTH;
         //connect to db
         $this->dblink=mysqli_connect($this->dbhost,$this->dbuser,$this->dbpass,$this->dbname);
-        if (!$uid) $uid=$_SESSION[$this->user_session]['userID'];
+        if (!$uid) {
+            //var_dump($_SESSION);
+            $uid = isset($_SESSION[$this->user_session]['userID']) ? $_SESSION[$this->user_session]['userID'] : null;
+        };
 
         $userinfo=$this->user_info($uid);
         if ($userinfo['userID'])
@@ -351,7 +354,7 @@ class MCWDUser{
         //echo $sql;
         if ($rs=mysqli_query($this->dblink,$sql))
             $r=mysqli_fetch_assoc($rs);
-        return $r;
+        return isset($r) ? $r : null;
     }
     public function is_logged_in(){
         //return true or false
