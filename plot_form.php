@@ -9,6 +9,9 @@ require_once 'includes/qp_header.php';
 <style>
 
 #graph {
+  font: 12px sans-serif;
+}
+#graph .label {
   font: 10px sans-serif;
 }
 
@@ -19,12 +22,8 @@ require_once 'includes/qp_header.php';
   shape-rendering: crispEdges;
 }
 
-.dot {
-  stroke: #000;
-}
-
 </style>
-<h1>Measurements Graphing
+<h1>Measurement Graphing</h1>
 
 <form name="f1" id="f1">
 <table class="formtable">
@@ -62,12 +61,10 @@ require_once 'includes/qp_header.php';
     </tr>
     <tr><td class="tdright">Start Date</td><td><input type="text" name="stdate" id="stdate" size="15" class="calendarSelectDate"></td></tr>
     <tr><td class="tdright">End Date</td><td><input type="text" name="enddate" id="enddate" size="15" class="calendarSelectDate"></td></tr>
-    <tr>
-    <td></td>
-    <td><button type="button" onclick="graph();">Graph</button></td>
-    </tr>
+    <tr><td class="tdright">Surface Only</td><td><input type="checkbox" name="surface" id="surface" checked></td></tr>
     </table>
 </form>
+<div id=message>&nbsp;</div>
 <div id=graph></div>
 <div id="calendarDiv"></div>
 
@@ -98,6 +95,8 @@ var yAxis = d3.svg.axis()
 
 var format = d3.time.format("%Y-%m-%d");
 
+var minDate, maxDate = new Date();
+
 var idfn = function(d) { return d.id};
 
 var svg = "";
@@ -112,6 +111,7 @@ function updateParams() {
             $("#mtypeid").append("<option value='" + name["mtypeid"] + "'>" + name["mtname"] + "</option>");
         });
         $("#mtypeid").prop("disabled", false);
+        graph();
     });
 };
 
@@ -151,10 +151,24 @@ $(document).ready( function() {
     $("#siteid").change( function() {
         updateParams();
     });
+
+    $("#surface, #mtypeid").change( function() {
+        graph();
+    });
+    $("#stdate, #enddate").live("input", function() {
+        graph();
+    });
+    
+    $("#calendarDiv").live("click", function() {
+        graph();
+    });
+    
 });
 
 function graph() {
     theData = [];
+    
+    $("#message").text("Loading...");
     
     // Add the get variables to the URL by grabbing form input values.
     var url = "apis/measurements_ajax.php?";
@@ -162,6 +176,8 @@ function graph() {
     url = $("#siteid").val().length > 0 ? url + "&siteid=" + $("#siteid").val() : url;
     url = $("#stdate").val().length > 0 ? url + "&minDate=" + $("#stdate").val() : url;
     url = $("#enddate").val().length > 0 ? url + "&maxDate=" + $("#enddate").val() : url;
+    url = $("#surface:checked").length > 0 ? url + "&maxDepth=1" : url;
+    
     
     // Query the data and add the graph
     d3.json(url, function(error, data) {
@@ -175,14 +191,16 @@ function graph() {
         });
         
         //Set the x & y domains by getting the extent of values, then padding a little
-        weekInMilliseconds = 604800000;
-        xMinMax     = d3.extent(data, function(d) { return d.theTime; });
-        xMinMaxMod  = [xMinMax[0]-weekInMilliseconds, xMinMax[1]+weekInMilliseconds];
+        var weekInMilliseconds = 604800000;
+        var xMinMax     = d3.extent(data, function(d) { return d.theTime; });
+        var xMinMaxMod  = [xMinMax[0]-weekInMilliseconds, xMinMax[1]+weekInMilliseconds];
         x.domain(xMinMaxMod);
+        minDate = new Date(xMinMax[0]);
+        maxDate = new Date(xMinMax[1]);
         
-        yMinMax     = d3.extent(data, function(d) { return d.value; });
-        yPadding    = (yMinMax[1]-yMinMax[0])/10;
-        yMinMaxMod  = [yMinMax[0]-yPadding, yMinMax[1]+yPadding];
+        var yMinMax     = d3.extent(data, function(d) { return d.value; });
+        var yPadding    = ((yMinMax[1]-yMinMax[0])/10)+(Math.abs(yMinMax[0])/10);
+        var yMinMaxMod  = [yMinMax[0]-yPadding, yMinMax[1]+yPadding];
         y.domain(yMinMaxMod).nice();
         
         // Set the data; the second parameter "idfn" is the unique ID of each measurement.
@@ -196,16 +214,15 @@ function graph() {
         
         points.enter().append("circle")
             .attr("class", "dot enter")
-            .attr("r", 3.5)
+            .attr("r", function(d) {return (d.depth >=1) ? 2.5 : 3.5})
             .attr("cx", function(d) { return x(d.theTime); })
             .attr("cy", function(d) { return y(d.value); })
             .attr("opacity", 0)
-            .attr("stroke", function(d) {return (d.depth >1) ? "gray" : "black"})
-            .attr("fill",   function(d) {return (d.depth >1) ? "none" : "black"})
-            
+            .attr("stroke", "black")
+            .attr("fill",   function(d) {return (d.depth >=1) ? "none" : "black"})
           .transition()
             .duration(500)
-            .attr("opacity", 1);
+            .attr("opacity", function(d) {return (d.depth >=1) ? 0.6 : 1});
           //.style("fill", function(d) { return color(d.species); });
           
         points.exit()
@@ -216,14 +233,18 @@ function graph() {
             .remove();
           
         svg.selectAll(".y.axis .label")
-            .text($("#mtypeid option:selected").text());
+            .text($("#mtypeid option:selected").text() + ": " + yMinMax[0] + " - " + yMinMax[1]);
+        svg.selectAll(".x.axis .label")
+            .text(minDate.toDateString() + " to " + maxDate.toDateString());
             
         var t = svg.transition().duration(500);
         t.select(".x.axis")
             .call(xAxis);
         t.select(".y.axis")
             .call(yAxis);
-
+        
+        $("#message").text("\xa0");
+        
     });
 }
 
