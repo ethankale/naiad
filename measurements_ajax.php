@@ -18,7 +18,7 @@ if (isset($_GET["mtypeid"]) && isset($_GET["siteid"])) {
     $conditions = "";
     $params     = array();
     
-    $sql = 'SELECT `value`, `mtypeid`, date_format(`mtime`, "%Y-%m-%d") as date, `monitoring_sites`.`siteid`, `waterbody_id`, `depth`, `mnotes`
+    $sql = 'SELECT `m_id` as id, `value`, `mtypeid`, date_format(`mtime`, "%Y-%m-%d") as date, UNIX_TIMESTAMP(`mtime`) * 1000 as theTime, `monitoring_sites`.`siteid`, `waterbody_id`, `depth`, `mnotes`
         FROM `measurements` 
         LEFT JOIN `monitoring_sites`
           ON `monitoring_sites`.`siteid` = `measurements`.`siteid`
