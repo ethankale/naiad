@@ -57,17 +57,6 @@ require_once 'includes/qp_header.php';
     <td class="tdright">Parameter</td>
     <td>
         <select name="mtypeid" id="mtypeid" style="width:300px">
-        <?php
-        $query = "SELECT `mtypeid` , `mtname`
-            FROM `measurement_type`";
-        $res = mysqli_query($mysqlid, $query);
-
-        while ($row = mysqli_fetch_array($res, MYSQLI_ASSOC)) {
-            echo '<option value="' . $row["mtypeid"] . '">' . $row["mtname"] . '</option>';
-        }
-        
-        mysqli_free_result($res);
-        ?>
         </select>
     </td>
     </tr>
@@ -113,10 +102,20 @@ var idfn = function(d) { return d.id};
 
 var svg = "";
 
+//Load up the parameters, filtered by site; append to the drop-down list
+function updateParams() {
+    var paramUrl = "apis/params_by_site.php?siteid=" + $("#siteid").val();
+    $("#mtypeid").empty();
+    $.getJSON(paramUrl, function(data) {
+        $.each(data, function(key, name) {
+            $("#mtypeid").append("<option value='" + name["mtypeid"] + "'>" + name["mtname"] + "</option>");
+        });
+    });
+};
 
-// Wait until the document is ready to set up the graphing area.
 $(document).ready( function() {
     
+    // Wait until the document is ready to set up the graphing area.
     svg = d3.select("#graph").append("svg")
       .attr("width", width + margin.left + margin.right)
       .attr("height", height + margin.top + margin.bottom)
@@ -143,14 +142,20 @@ $(document).ready( function() {
       .attr("y", 6)
       .attr("dy", ".71em")
       .style("text-anchor", "end")
-      .text("X Axis (unit)");
+      .text("Y Axis (unit)");
+
+    updateParams();
+    
+    $("#siteid").change( function() {
+        updateParams();
+    });
 });
 
 function graph() {
     theData = [];
     
     // Add the get variables to the URL by grabbing form input values.
-    var url = "measurements_ajax.php?";
+    var url = "apis/measurements_ajax.php?";
     url = $("#mtypeid").val().length > 0 ? url + "&mtypeid=" + $("#mtypeid").val() : url;
     url = $("#siteid").val().length > 0 ? url + "&siteid=" + $("#siteid").val() : url;
     url = $("#stdate").val().length > 0 ? url + "&minDate=" + $("#stdate").val() : url;
@@ -160,20 +165,55 @@ function graph() {
     d3.json(url, function(error, data) {
         theData = data;
         
-        x.domain(d3.extent(theData, function(d) { return d.value; })).nice();
-        y.domain(d3.extent(theData, function(d) { return d.theTime; })).nice();
+        // Coerce each x/y value into a number
+        data.forEach(function(d) {
+            d.value     = +d.value;
+            d.theTime   = +d.theTime;
+            d.depth     = +d.depth;
+        });
         
+        x.domain(d3.extent(data, function(d) { return d.theTime; }));
+        y.domain(d3.extent(data, function(d) { return d.value; })).nice();
+        
+        // Set the data; the second parameter "idfn" is the unique ID of each measurement.
         var points = svg.selectAll(".dot").data(data, idfn);
         
+        points.attr("class", "dot update")
+          .transition()
+            .duration(500)
+            .attr("cx", function(d) { return x(d.theTime); })
+            .attr("cy", function(d) { return y(d.value); });
+        
         points.enter().append("circle")
-          .attr("class", "dot")
-          .attr("r", 3.5)
-          .attr("cx", function(d) { return x(d.value); })
-          .attr("cy", function(d) { return y(d.theTime); });
+            .attr("class", "dot enter")
+            .attr("r", 3.5)
+            .attr("cx", function(d) { return x(d.theTime); })
+            .attr("cy", function(d) { return y(d.value); })
+            .attr("opacity", 0)
+            .attr("stroke", function(d) {return (d.depth >1) ? "gray" : "black"})
+            .attr("fill",   function(d) {return (d.depth >1) ? "none" : "black"})
+            
+          .transition()
+            .duration(500)
+            .attr("opacity", 1);
           //.style("fill", function(d) { return color(d.species); });
           
         points.exit()
-          .remove();
+            .attr("class", "dot exit")
+          .transition()
+            .duration(500)
+            .attr("opacity", 0)
+            .remove();
+          
+        svg.selectAll(".y.axis .label")
+            .text($("#mtypeid").val());
+            
+        var t = svg.transition().duration(500);
+        t.select(".x.axis")
+            .call(xAxis);
+        t.select(".y.axis")
+            .call(yAxis);
+
     });
 }
 
