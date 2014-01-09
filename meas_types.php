@@ -14,19 +14,17 @@ login_check($pagelevel, $log_user);
 $submitPost = isset($_POST['submit']) ? $_POST['submit'] : null;
 $actionGet  = isset($_GET['action']) ? $_GET['action'] : null;
 
-if ($submitPost=="Submit" && ($_POST['action']=="new" || $_POST['action']=="edit"))
-{
+if ($submitPost=="Submit" && ($_POST['action']=="new" || $_POST['action']=="edit")) {
     $throw_error=false;
-    if($_POST['action']=="new") 
-    {
+    
+    if($_POST['action']=="new") {
         $action_result="added";
         $query = "INSERT INTO measurement_type (mtypeid, mtname, storet_header, units, lake, stream, l_collection_method, l_lower_bound, l_upper_bound, l_profile, l_multi_depth, s_collection_method, s_lower_bound, s_upper_bound, active, disp_order, notes) 
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = mysqli_prepare($mysqlid, $query);
         mysqli_stmt_bind_param($stmt, 'ssssiisddiisddiis', $mtypeid, $mtname, $storet_header, $units, $lake, $stream, $l_collection_method, $l_lower_bound, $l_upper_bound, $l_profile, $l_multi_depth, $s_collection_method, $s_lower_bound, $s_upper_bound, $active, $disp_order, $notes);    
     }
-    if($_POST['action']=="edit") 
-    {
+    if($_POST['action']=="edit") {
         $action_result="updated";
         $query = "UPDATE measurement_type SET mtypeid=?, mtname=?, storet_header=?, units=?, lake=?, stream=?, l_collection_method=?, l_lower_bound=?, l_upper_bound=?, 
             l_profile=?, l_multi_depth=?, s_collection_method=?, s_lower_bound=?, s_upper_bound=?, active=?, disp_order=?, notes=? WHERE mtypeid=?";
@@ -34,28 +32,29 @@ if ($submitPost=="Submit" && ($_POST['action']=="new" || $_POST['action']=="edit
         mysqli_stmt_bind_param($stmt, 'ssssiisddiisddiiss', $mtypeid, $mtname, $storet_header, $units, $lake, $stream, $l_collection_method, $l_lower_bound, $l_upper_bound, $l_profile, $l_multi_depth, $s_collection_method, $s_lower_bound, $s_upper_bound, $active, $disp_order, $notes, $oldmtypeid);
         $oldmtypeid=$_POST['oldmtypeid'];
     }
-    $mtypeid            = $_POST['mtypeid'];
-    $siteid             = $_POST['siteid'];
-    $mtname             = $_POST['mtname'];
-    $storet_header      = $_POST['storet_header'];
-    $units              = $_POST['units'];
-    $lake               = ($_POST['lake']==1) ? 1 : 0;
-    $stream             = ($_POST['stream']==1) ? 1 : 0;
-    $l_collection_method= $_POST['l_collection_method'];
-    $l_lower_bound      = $_POST['l_lower_bound'];
-    if ($_POST['l_lower_unbound']=="true") {$l_lower_bound=NULL;}
-    $l_upper_bound      = $_POST['l_upper_bound'];
-    if ($_POST['l_upper_unbound']=="true") {$l_upper_bound=NULL;}
-    $l_profile          = ($_POST['l_profile']==1) ? 1  :0;
-    $l_multi_depth      = ($_POST['l_multi_depth']==1) ? 1 : 0;
-    $s_collection_method= $_POST['s_collection_method'];
-    $s_lower_bound      = $_POST['s_lower_bound'];
-    if ($_POST['s_lower_unbound']=="true") {$s_lower_bound=NULL;}
-    $s_upper_bound      = $_POST['s_upper_bound'];
-    if ($_POST['s_upper_unbound']=="true") {$s_upper_bound=NULL;}
-    $active             = ($_POST['active']==1) ? 1 : 0;
-    $disp_order         = $_POST['disp_order'];
-    $notes              = $_POST['notes'];
+    
+    $mtypeid            = isset($_POST['mtypeid']) ? $_POST['mtypeid'] : null;
+    $siteid             = isset($_POST['siteid']) ? $_POST['siteid'] : null;
+    $mtname             = isset($_POST['mtname']) ? $_POST['mtname'] : null;
+    $storet_header      = isset($_POST['storet_header']) ? $_POST['storet_header'] : null;
+    $units              = isset($_POST['units']) ? $_POST['units'] : null;
+    $lake               = isset($_POST['lake']) ?(($_POST['lake']==1) ? 1 : 0) : null;
+    $stream             = isset($_POST['stream']) ? (($_POST['stream']==1) ? 1 : 0) : null;
+    $l_collection_method= isset($_POST['l_collection_method']) ? $_POST['l_collection_method'] : null;
+    $l_lower_bound      = isset($_POST['l_lower_bound']) ? $_POST['l_lower_bound'] : null;
+    if (isset($_POST['l_lower_unbound']) ? ($_POST['l_lower_unbound']=="true") : true) {$l_lower_bound=NULL;}
+    $l_upper_bound      = isset($_POST['l_upper_bound']) ? $_POST['l_upper_bound'] : null ;
+    if (isset($_POST['l_upper_unbound']) ? ($_POST['l_upper_unbound']=="true") : true) {$l_upper_bound=NULL;}
+    $l_profile          = isset($_POST['l_profile']) ? (($_POST['l_profile']==1) ? 1  :0) : null;
+    $l_multi_depth      = isset($_POST['l_multi_depth']) ? (($_POST['l_multi_depth']==1) ? 1 : 0) : null;
+    $s_collection_method= isset($_POST['s_collection_method']) ? $_POST['s_collection_method'] : null;
+    $s_lower_bound      = isset($_POST['s_lower_bound']) ? $_POST['s_lower_bound'] : null;
+    if (isset($_POST['s_lower_unbound']) ? ($_POST['s_lower_unbound']=="true") : true) {$s_lower_bound=NULL;}
+    $s_upper_bound      = isset($_POST['s_upper_bound']) ? $_POST['s_upper_bound'] : null;
+    if (isset($_POST['s_upper_unbound']) ? ($_POST['s_upper_unbound']=="true") : true) {$s_upper_bound=NULL;}
+    $active             = isset($_POST['active']) ? (($_POST['active']==1) ? 1 : 0) : null;
+    $disp_order         = isset($_POST['disp_order']) ? $_POST['disp_order'] : null;
+    $notes              = isset($_POST['notes']) ? $_POST['notes'] : null;
     
     mysqli_stmt_execute($stmt);
     if (mysqli_stmt_errno($stmt)){ 

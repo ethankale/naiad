@@ -43,6 +43,7 @@ $editPost       = isset($_POST['edit']) ? $_POST['edit'] : null;
 $siteidGet      = isset($_GET['siteid']) ? $_GET['siteid'] : null;
 $mtimeGet       = isset($_GET['mtime']) ? $_GET['mtime'] : null;
 $collectByPost  = isset($_POST['collected_by']) ? $_POST['collected_by'] : null;
+$sdatePost      = isset($_POST['sdate']) ? $_POST['sdate'] : null;
 
 $wbody_type     = null;
 
@@ -96,7 +97,7 @@ if($factionGet=="edit" && $siteidGet && $mtimeGet)
     
     while(mysqli_stmt_fetch($load_stmt)) {
         $_POST['depth']         = round($depth,6);
-        list($_POST['sdate'],$_POST['stime'])=explode(" ", $mtime);
+        list($sdatePost,$_POST['stime'])=explode(" ", $mtime);
         $_POST['siteid']        = $siteid;
         $_POST['proc_id']       = $proc_id;
         $_POST['collected_by']  = $collected_by;
@@ -160,10 +161,10 @@ if ($act_input)
     $waterbody_id = $_POST['waterbody_id'];
     $wbody_type = $_POST['wbody_type'];
     $siteid = $_POST['siteid'];
-    if (preg_match ('`^([0-9]{1,2})/([0-9]{1,2})/([0-9]{4})$`', $_POST['sdate'], $parts))
+    if (preg_match ('`^([0-9]{1,2})/([0-9]{1,2})/([0-9]{4})$`', $sdatePost, $parts))
     {
         //check whether the date is valid of not checkdate($parts[2],$parts[3],$parts[1
-        $_POST['sdate'] = sprintf("%04d-%02d-%02d", $parts[3],$parts[1],$parts[2]);
+        $sdatePost = sprintf("%04d-%02d-%02d", $parts[3],$parts[1],$parts[2]);
     }
     if (!strpos($_POST['stime'], ":"))
     {

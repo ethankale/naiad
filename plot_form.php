@@ -199,7 +199,7 @@ function graph() {
         maxDate = new Date(xMinMax[1]);
         
         var yMinMax     = d3.extent(data, function(d) { return d.value; });
-        var yPadding    = ((yMinMax[1]-yMinMax[0])/10)+(Math.abs(yMinMax[0])/10);
+        var yPadding    = ((yMinMax[1]-yMinMax[0])/10);
         var yMinMaxMod  = [yMinMax[0]-yPadding, yMinMax[1]+yPadding];
         y.domain(yMinMaxMod).nice();
         
