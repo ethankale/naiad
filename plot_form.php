@@ -22,6 +22,17 @@ require_once 'includes/qp_header.php';
   shape-rendering: crispEdges;
 }
 
+div.tooltip {
+  position: absolute;
+  text-align: center;
+  padding: 2px;
+  font: 12px sans-serif;
+  background: white;
+  border: 0px;
+  border-radius: 6px;
+  pointer-events: none;
+}
+
 </style>
 <h1>Measurement Graphing</h1>
 
@@ -100,6 +111,7 @@ var minDate, maxDate = new Date();
 var idfn = function(d) { return d.id};
 
 var svg = "";
+var div = "";
 
 //Load up the parameters, filtered by site; append to the drop-down list
 function updateParams() {
@@ -145,7 +157,13 @@ $(document).ready( function() {
       .attr("dy", ".71em")
       .style("text-anchor", "end")
       .text("Y Axis (unit)");
-
+    
+    div = d3.select("body").append("div")
+      .attr("class", "tooltip")
+      .style("opacity", 0)
+      .style("position", "absolute")
+      .style("z-index", "10");
+    
     updateParams();
     
     $("#siteid").change( function() {
@@ -214,15 +232,29 @@ function graph() {
         
         points.enter().append("circle")
             .attr("class", "dot enter")
-            .attr("r", function(d) {return (d.depth >=1) ? 2.5 : 3.5})
+            .attr("r", function(d) {return (d.depth >1) ? 2.5 : 3.5})
             .attr("cx", function(d) { return x(d.theTime); })
             .attr("cy", function(d) { return y(d.value); })
             .attr("opacity", 0)
             .attr("stroke", "black")
-            .attr("fill",   function(d) {return (d.depth >=1) ? "none" : "black"})
+            .attr("fill",   function(d) {return (d.depth >1) ? "none" : "black"})
+            .on("mouseover", function(d) {
+                //alert(d.value);
+                div.transition()
+                  .duration(300)
+                  .style("opacity", .9);
+                div.html(d.value)
+                  .style("left", (d3.event.pageX) + "px")
+                  .style("top", (d3.event.pageY-25) + "px");
+            })
+            .on("mouseout", function(d) {
+                div.transition()
+                  .duration(300)
+                  .style("opacity", 0);
+            })
           .transition()
             .duration(500)
-            .attr("opacity", function(d) {return (d.depth >=1) ? 0.6 : 1});
+            .attr("opacity", function(d) {return (d.depth >1) ? 0.6 : 1});
           //.style("fill", function(d) { return color(d.species); });
           
         points.exit()
