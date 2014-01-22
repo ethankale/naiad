@@ -9,31 +9,34 @@ function output_start ($type, $page_title, $incfile){
     $log_user = &$GLOBALS["log_user"];
     if ($type==OF_TBL){
         require_once "$incfile";
-        
+        return "";
     }    
     elseif ($type==OF_CSV){
         set_time_limit(0);
+        $output = fopen("php://output",'w') or die("Can't open php://output");
         header('Expires: 0');
         header('Cache-control: private');
         header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
         header('Content-Description: File Transfer');
-        header('Content-type: text/x-csv');
+        header('Content-type: text/csv');
         header("Content-disposition: attachment; filename=\"$page_title\"");
-    }    
+        return $output;
+    }
+    
 }
 
 // outputs text and a line break
-function output_line($type, $text, $csv_display=true){
+function output_line($type, $text, $csv_display=true, $output){
     if ($type==OF_TBL){
         print "$text<br>\n";
     }
     elseif ($type==OF_CSV && $csv_display){
-        print "$text\n";
+        fputcsv($output, array($text));
     }
 }
 
-// outputs line, plus html output hase a more info link that will display third argument
-function output_site_info($type, $title, $text)
+// outputs line, plus html output has a "more info" link that will display third argument
+function output_site_info($type, $title, $text, $output)
 {
     if ($type==OF_TBL){
         if ($title) {
@@ -46,14 +49,14 @@ function output_site_info($type, $title, $text)
     }    
     elseif ($type==OF_CSV){
         if ($title) {
-            print "\"$title\"\n";
+            fputcsv($output,array($title));
         }
     }
 }
 
 //displays header row, html output opens table tag and displays sort arrows
 // It's very important that the $units and $cols arrays have the same number of values, in the same order
-function output_header($type, $cols, $sort=array(), $text="", $units=""){
+function output_header($type, $cols, $sort=array(), $text="", $units="", $output){
     
     if ($type==OF_TBL){
         print "<table class=\"datatable\">\n";
@@ -83,27 +86,33 @@ function output_header($type, $cols, $sort=array(), $text="", $units=""){
     }        
     elseif ($type==OF_CSV){
         if ($text) {
-            print "\"$text\"\n";
+            fputcsv($output,array($text));
         }
+        $colsArray = array();
+        
+        // Each column and (if it exists) notes field gets a separate CSV column.
         if (sizeof($cols)>0){
-            
-            print "\"$cols[0]\",";
-            
-            $theUnit = "";
-            
-            for ($i=1;$i<(sizeof($cols)-1);$i++)
+            $colsArray[0] = "Site ID";
+            $j = 1;
+            for ($i=1;$i<(sizeof($cols));$i++)
             {
-                $theUnit = isset($units[$i]) ? $units[$i] : "";
-                print "\"$cols[$i] ($theUnit)\",\"$cols[$i] Notes\",";
+                if(isset($units[$i])) {
+                    $colsArray[$j] = $cols[$i] . " " . $units[$i];
+                } else{
+                    $colsArray[$j] = $cols[$i];
+                };
+                $j++;
+                $colsArray[$j] = $cols[$i] . " Notes";
+                $j++;
             }
-            print "\"$cols[$i] ($theUnit)\",\"$cols[$i] Notes\"\n";
+            fputcsv($output,$colsArray);
         }
     }    
 }
 
 // display an output row, with values in second variable, with output formatting in the third argument
 // $type here is the same as $output_type in measurements_report.php.
-function output_row ($type,$values_ar,$values_type){
+function output_row ($type,$values_ar,$values_type, $output){
     $log_user   = &$GLOBALS["log_user"];
     $output_ar  = array();
     $notes_ar   = array();
@@ -177,13 +186,24 @@ function output_row ($type,$values_ar,$values_type){
     elseif ($type==OF_CSV){
         if (sizeof($output_ar)>0){
             
-            print "$output_ar[0],";
-            for ($i=1;$i<(sizeof($output_ar)-1);$i++)
+            $lineArr    = array();
+            $lineArr[0] = $output_ar[0];
+            //print "$output_ar[0],";
+            
+            $j = 1;
+            for ($i=1;$i<(sizeof($output_ar));$i++)
             {
-                $notesArr   = isset($notes_ar[$i]) ? $notes_ar[$i] : null;
-                print "$output_ar[$i],".($notesArr ? $notesArr : "").",";
+                $lineArr[$j] = $output_ar[$i];
+                $j++;
+                $lineArr[$j] = isset($notes_ar[$i]) ? $notes_ar[$i] : "";
+                $j++;
+                
+                //if(isset($notes_ar[$i])) {
+                //    $lineArr[$j] = $notes_ar[$i];
+                //    $j++;
+                //}
             }
-            print "$output_ar[$i],".(isset($notes_ar[$i]) ? $notes_ar[$i] : "")."\n";
+            fputcsv($output,$lineArr);
         }
     }
 }

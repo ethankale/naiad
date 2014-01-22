@@ -18,7 +18,6 @@ if (isset($_GET['storet_output'])) {
     };
 };
 
-
 if ((isset($_GET['downloadcsv']) ? $_GET['downloadcsv'] : null) =="true") {
     $output_type=OF_CSV;
     $page_title="meas".$_GET["waterbodyid"].".csv";
@@ -28,16 +27,16 @@ else {
     $output_type=OF_TBL;
 }
 //send the page/file header info
-output_start($output_type, $page_title, "includes/qp_header.php");
+$output = output_start($output_type, $page_title, "includes/qp_header.php");
 
 $elink="add_measurement.php?faction=edit&";
 $graphlink="plot.php?";
 
 $relink_csv='<a href="'.$_SERVER["REQUEST_URI"].'&downloadcsv=true">Download as .csv</a>';
-output_line($output_type, $relink_csv,false);
+output_line($output_type, $relink_csv,false, $output);
 
 $research_link='<a href="measurements_form.php?'.$_SERVER["QUERY_STRING"].'">Search again</a>';
-output_line($output_type, $research_link,false);
+output_line($output_type, $research_link,false,$output);
 $edit_return = urlencode ("measurements_report.php?".$_SERVER["QUERY_STRING"]);
 $profile=0;
 
@@ -217,7 +216,8 @@ foreach ($sites as $siteid)
         else {$edit_link=array();}
     }
     else {
-        output_line($output_type, "No data at $site_description with your parameters");
+        // May need a conditional & two statements here, one for CSV and one for table.
+        output_line($output_type, "No data at $site_description with your parameters",false, $output);
         continue;
     }
     
@@ -276,10 +276,10 @@ foreach ($sites as $siteid)
     mysqli_stmt_free_result($measstmt);
     $sort_headers = array_keys($fulldata[0]);
 
-    output_site_info($output_type, $tabletitle, $site_info);
-    output_header($output_type, $headers, $sort_headers,"",$units);
+    output_site_info($output_type, $tabletitle, $site_info, $output);
+    output_header($output_type, $headers, $sort_headers,"",$units, $output);
 
-    if (!$profile && $output_type!=OF_CSV) {output_row($output_type, $graphlinks, str_repeat(DATA_STRING, count($graphlinks)));}
+    if (!$profile && $output_type!=OF_CSV) {output_row($output_type, $graphlinks, str_repeat(DATA_STRING, count($graphlinks)), $output);}
     usort($fulldata, "compare_vals");
     $oldday="";
     
@@ -291,7 +291,7 @@ foreach ($sites as $siteid)
             $row["time"]="";
         }else $oldday=$row["time"];
         
-        output_row($output_type, $row, $data_type);
+        output_row($output_type, $row, $data_type, $output);
         
     }
     output_footer($output_type);
