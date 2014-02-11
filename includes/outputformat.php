@@ -56,7 +56,7 @@ function output_site_info($type, $title, $text, $output)
 
 //displays header row, html output opens table tag and displays sort arrows
 // It's very important that the $units and $cols arrays have the same number of values, in the same order
-function output_header($type, $cols, $sort=array(), $text="", $units="", $output){
+function output_header($type, $cols, $sort=array(), $text="", $units="", $output=""){
     
     if ($type==OF_TBL){
         print "<table class=\"datatable\">\n";
@@ -83,7 +83,7 @@ function output_header($type, $cols, $sort=array(), $text="", $units="", $output
             }
             print "</TR>\n";
         }
-    }        
+    }
     elseif ($type==OF_CSV){
         if ($text) {
             fputcsv($output,array($text));

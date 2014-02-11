@@ -23,10 +23,10 @@ else {
     $page_title='Precipitation Data Request Form';
     $output_type=OF_TBL;
 }
-output_start($output_type, $page_title, "includes/qp_header.php");
+$output = output_start($output_type, $page_title, "includes/qp_header.php");
 
 $relink_csv='<a href="'.$_SERVER["REQUEST_URI"].'&downloadcsv=true">Download as .csv</a><br>';
-output_line($output_type, $relink_csv,false);
+output_line($output_type, $relink_csv,false,$output);
 
 $elink          ="precip_add.php?action=edit&";
 $outputfields   = "";
@@ -62,7 +62,7 @@ if ($report_typeGet =="raw") {
     if ($wind_speedGet=="true") $headers[]="wind_speed_mph";
     if ($wind_dirGet=="true")   $headers[]="wind_dir";
     if ($air_pressGet=="true")  $headers[]="pressure_mmhg";
-    output_header($output_type, $headers);
+    output_header($output_type, $headers, array(), "", "", $output);
 
     $query = "SELECT inches, air_temp_f, wind_speed_mph, wind_dir, pressure_mmhg, pmdate, pm_id from precipitation_measurements WHERE PS_ID=? and pmdate>=? and pmdate<=? order by pmdate";
     $stmt = mysqli_prepare($mysqlid, $query); 
@@ -83,7 +83,7 @@ if ($report_typeGet =="raw") {
         if ($air_pressGet=="true")  {$data[]=$pressure_mmhg; $data_type.=DATA_FLOAT2;}
         
         $data["edit_link"] = $elink."pm_id=$pm_id";
-        output_row($output_type, $data, $data_type);
+        output_row($output_type, $data, $data_type,$output);
     }
     
 }
@@ -110,7 +110,7 @@ if ($report_typeGet =="daily" || $report_typeGet =="monthly") {
     if ($wind_speedGet=="true") array_push($headers, "wind_speed_mph (max)","wind_speed_mph (avg)","wind_speed_mph (min)");
     if ($wind_dirGet=="true")   $headers[]="wind_dir (avg)";
     if ($air_pressGet=="true")  array_push($headers, "pressure_mmhg (max)","pressure_mmhg (avg)","pressure_mmhg (min)");
-    output_header($output_type, $headers);
+    output_header($output_type, $headers, array(), "", "", $output);
     
     $select_block = " date_format(pmdate,'$date_format') AS `day`,sum(inches) AS precip,max(air_temp_f) AS max_T,min(air_temp_f) AS min_T,avg(air_temp_f) AS avg_T,
         max(wind_speed_mph) AS max_wind,min(wind_speed_mph) AS min_wind,avg(wind_speed_mph) AS avg_wind,avg(wind_dir) AS avg_wind_dir,
@@ -138,7 +138,7 @@ if ($report_typeGet =="daily" || $report_typeGet =="monthly") {
         if ($wind_dirGet=="true")   {$data[]=$avg_wind_dir; $data_type.=DATA_FLOAT2;}
         if ($air_pressGet=="true")  {array_push($data, $max_press,$avg_press,$min_press); $data_type.=DATA_FLOAT2.DATA_FLOAT2.DATA_FLOAT2;}
         
-        output_row($output_type, $data, $data_type);
+        output_row($output_type, $data, $data_type, $output);
     }
 }
 output_footer($output_type);
