@@ -1,25 +1,35 @@
 @CHARSET "ISO-8859-1";
 body {
     font-family: arial, helvetica, sans-serif; 
-    margin:0px;
+    margin: 0px;
+    width: 100%;
 }
+
+
 
 div.header{
     background-color:#00B4F7;
     padding:10px;
     color:white;
     font-weight:bold;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
 }
 div.header a:link, div.header a:visited{
     color:white;
 }
 div.body{
     padding:10px;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 div.navheader{
     background-color:#00B4F7;
     font-weight:normal;
+    font-size: .8em;
 }
  div.navheader a:link, div.navheader a:visited{
     color:white;
@@ -33,15 +43,18 @@ div.navheader{
 
 TABLE.datatable {
     border-spacing:0px;
-    border:solid black 1px;    
+    border: 1px solid;
+    border-color: #cccccc;
     border-collapse:collapse;
+    font-size: .8em;
 }
 TABLE.datatable TD,TABLE.datatable TH {
 
     vertical-align:top;
     padding-left:5px;
     padding-right:5px;
-    border:solid black 1px;    
+    border: 1px solid;
+    border-color: #cccccc;
     border-collapse:collapse;
     
 }
